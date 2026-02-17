@@ -47,7 +47,9 @@
  
        <nav className="mt-2 flex-1 space-y-2 px-4">
          {navItems.map((item) => {
-           const isActive = pathname === item.href
+           const isActive = item.href === '/'
+             ? pathname === item.href
+             : pathname.startsWith(item.href)
            return (
              <Link
                key={item.href}
