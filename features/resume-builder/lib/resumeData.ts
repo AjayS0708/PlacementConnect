@@ -1,0 +1,410 @@
+export type PersonalInfo = {
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+};
+
+export type EducationEntry = {
+  school: string;
+  degree: string;
+  year: string;
+};
+
+export type ExperienceEntry = {
+  company: string;
+  role: string;
+  duration: string;
+  highlights: string;
+};
+
+export type ProjectEntry = {
+  title: string;
+  description: string;
+  techStack: string[];
+  liveUrl: string;
+  githubUrl: string;
+  highlights: string;
+};
+
+export type SkillsByCategory = {
+  technical: string[];
+  soft: string[];
+  tools: string[];
+};
+
+export type ResumeBuilderData = {
+  personal: PersonalInfo;
+  summary: string;
+  education: EducationEntry[];
+  experience: ExperienceEntry[];
+  projects: ProjectEntry[];
+  skillsByCategory: SkillsByCategory;
+  skills: string;
+  github: string;
+  linkedin: string;
+};
+
+export type AtsResult = {
+  score: number;
+  suggestions: string[];
+  allCriteriaMet: boolean;
+};
+
+export type ResumeTemplate = 'classic' | 'modern' | 'minimal';
+export type ResumeAccentKey = 'teal' | 'navy' | 'burgundy' | 'forest' | 'charcoal';
+export type ResumeAccentTheme = {
+  key: ResumeAccentKey;
+  label: string;
+  hsl: string;
+};
+
+export const RESUME_STORAGE_KEY = 'resumeBuilderData';
+export const RESUME_TEMPLATE_KEY = 'resumeTemplateChoice';
+export const RESUME_ACCENT_KEY = 'resumeAccentChoice';
+export const RESUME_TEMPLATES: ResumeTemplate[] = ['classic', 'modern', 'minimal'];
+export const RESUME_ACCENTS: ResumeAccentTheme[] = [
+  { key: 'teal', label: 'Teal', hsl: 'hsl(168, 60%, 40%)' },
+  { key: 'navy', label: 'Navy', hsl: 'hsl(220, 60%, 35%)' },
+  { key: 'burgundy', label: 'Burgundy', hsl: 'hsl(345, 60%, 35%)' },
+  { key: 'forest', label: 'Forest', hsl: 'hsl(150, 50%, 30%)' },
+  { key: 'charcoal', label: 'Charcoal', hsl: 'hsl(0, 0%, 25%)' }
+];
+
+export const createEmptyResumeData = (): ResumeBuilderData => ({
+  personal: { name: '', email: '', phone: '', location: '' },
+  summary: '',
+  education: [{ school: '', degree: '', year: '' }],
+  experience: [{ company: '', role: '', duration: '', highlights: '' }],
+  projects: [{ title: '', description: '', techStack: [], liveUrl: '', githubUrl: '', highlights: '' }],
+  skillsByCategory: { technical: [], soft: [], tools: [] },
+  skills: '',
+  github: '',
+  linkedin: ''
+});
+
+const normalizeStringArray = (value: unknown): string[] => {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value.map((item) => String(item ?? '').trim()).filter(Boolean);
+};
+
+const normalizeEducation = (raw: unknown): EducationEntry[] => {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return [{ school: '', degree: '', year: '' }];
+  }
+  return raw.map((item) => ({
+    school: typeof item === 'object' && item !== null && 'school' in item ? String((item as { school?: unknown }).school ?? '') : '',
+    degree: typeof item === 'object' && item !== null && 'degree' in item ? String((item as { degree?: unknown }).degree ?? '') : '',
+    year: typeof item === 'object' && item !== null && 'year' in item ? String((item as { year?: unknown }).year ?? '') : ''
+  }));
+};
+
+const normalizeExperience = (raw: unknown): ExperienceEntry[] => {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return [{ company: '', role: '', duration: '', highlights: '' }];
+  }
+  return raw.map((item) => ({
+    company: typeof item === 'object' && item !== null && 'company' in item ? String((item as { company?: unknown }).company ?? '') : '',
+    role: typeof item === 'object' && item !== null && 'role' in item ? String((item as { role?: unknown }).role ?? '') : '',
+    duration: typeof item === 'object' && item !== null && 'duration' in item ? String((item as { duration?: unknown }).duration ?? '') : '',
+    highlights: typeof item === 'object' && item !== null && 'highlights' in item ? String((item as { highlights?: unknown }).highlights ?? '') : ''
+  }));
+};
+
+const normalizeProjects = (raw: unknown): ProjectEntry[] => {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return [{ title: '', description: '', techStack: [], liveUrl: '', githubUrl: '', highlights: '' }];
+  }
+  return raw.map((item) => {
+    const legacy = (typeof item === 'object' && item !== null ? item : {}) as {
+      title?: unknown;
+      name?: unknown;
+      description?: unknown;
+      techStack?: unknown;
+      liveUrl?: unknown;
+      githubUrl?: unknown;
+      highlights?: unknown;
+    };
+
+    return {
+      title: String(legacy.title ?? legacy.name ?? ''),
+      description: String(legacy.description ?? ''),
+      techStack: normalizeStringArray(legacy.techStack),
+      liveUrl: String(legacy.liveUrl ?? ''),
+      githubUrl: String(legacy.githubUrl ?? ''),
+      highlights: String(legacy.highlights ?? '')
+    };
+  });
+};
+
+const normalizeSkillsByCategory = (raw: unknown, fallbackSkills: string): SkillsByCategory => {
+  const parsed = (typeof raw === 'object' && raw !== null ? raw : {}) as {
+    technical?: unknown;
+    soft?: unknown;
+    tools?: unknown;
+  };
+
+  const technical = normalizeStringArray(parsed.technical);
+  const soft = normalizeStringArray(parsed.soft);
+  const tools = normalizeStringArray(parsed.tools);
+
+  if (technical.length === 0 && soft.length === 0 && tools.length === 0) {
+    return {
+      technical: fallbackSkills.split(',').map((item) => item.trim()).filter(Boolean),
+      soft: [],
+      tools: []
+    };
+  }
+
+  return { technical, soft, tools };
+};
+
+export const normalizeResumeData = (input: unknown): ResumeBuilderData => {
+  if (typeof input !== 'object' || input === null) {
+    return createEmptyResumeData();
+  }
+
+  const raw = input as Partial<ResumeBuilderData>;
+  const legacySkills = String(raw.skills ?? '');
+
+  return {
+    personal: {
+      name: String(raw.personal?.name ?? ''),
+      email: String(raw.personal?.email ?? ''),
+      phone: String(raw.personal?.phone ?? ''),
+      location: String(raw.personal?.location ?? '')
+    },
+    summary: String(raw.summary ?? ''),
+    education: normalizeEducation(raw.education),
+    experience: normalizeExperience(raw.experience),
+    projects: normalizeProjects(raw.projects),
+    skillsByCategory: normalizeSkillsByCategory(raw.skillsByCategory, legacySkills),
+    skills: legacySkills,
+    github: String(raw.github ?? ''),
+    linkedin: String(raw.linkedin ?? '')
+  };
+};
+
+export const loadResumeData = (): ResumeBuilderData => {
+  const raw = localStorage.getItem(RESUME_STORAGE_KEY);
+  if (!raw) {
+    return createEmptyResumeData();
+  }
+
+  try {
+    return normalizeResumeData(JSON.parse(raw));
+  } catch {
+    return createEmptyResumeData();
+  }
+};
+
+export const saveResumeData = (data: ResumeBuilderData): void => {
+  localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(data));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('resume-data-updated'));
+  }
+};
+
+const normalizeTemplate = (value: unknown): ResumeTemplate => {
+  if (value === 'classic' || value === 'modern' || value === 'minimal') {
+    return value;
+  }
+  return 'classic';
+};
+
+export const loadResumeTemplate = (): ResumeTemplate => {
+  return normalizeTemplate(localStorage.getItem(RESUME_TEMPLATE_KEY));
+};
+
+export const saveResumeTemplate = (template: ResumeTemplate): void => {
+  localStorage.setItem(RESUME_TEMPLATE_KEY, template);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('resume-template-updated'));
+  }
+};
+
+const normalizeAccent = (value: unknown): ResumeAccentKey => {
+  if (value === 'teal' || value === 'navy' || value === 'burgundy' || value === 'forest' || value === 'charcoal') {
+    return value;
+  }
+  return 'teal';
+};
+
+export const loadResumeAccent = (): ResumeAccentKey => {
+  return normalizeAccent(localStorage.getItem(RESUME_ACCENT_KEY));
+};
+
+export const saveResumeAccent = (accent: ResumeAccentKey): void => {
+  localStorage.setItem(RESUME_ACCENT_KEY, accent);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('resume-accent-updated'));
+  }
+};
+
+export const splitBullets = (text: string): string[] =>
+  text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+export const splitDescriptionPoints = (text: string): string[] => {
+  return text
+    .split('.')
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => `${part}.`);
+};
+
+export const getAllSkills = (data: ResumeBuilderData): string[] => {
+  const categorySkills = [
+    ...data.skillsByCategory.technical,
+    ...data.skillsByCategory.soft,
+    ...data.skillsByCategory.tools
+  ];
+  const legacySkills = data.skills.split(',').map((item) => item.trim()).filter(Boolean);
+  const combined = [...categorySkills, ...legacySkills];
+  return Array.from(new Set(combined.map((item) => item.trim()).filter(Boolean)));
+};
+
+const hasMeaningfulExperience = (entry: ExperienceEntry): boolean =>
+  [entry.company, entry.role, entry.duration, entry.highlights].some((value) => value.trim().length > 0);
+
+const hasMeaningfulProject = (entry: ProjectEntry): boolean =>
+  [entry.title, entry.description, entry.liveUrl, entry.githubUrl, entry.highlights]
+    .some((value) => value.trim().length > 0) || entry.techStack.length > 0;
+
+const containsNumericImpact = (text: string): boolean => /(\d+\s?%|\b\d+\b|\d+[xX]|\d+\s?[kK])/.test(text);
+
+const ACTION_VERBS = [
+  'Built',
+  'Developed',
+  'Designed',
+  'Implemented',
+  'Led',
+  'Improved',
+  'Created',
+  'Optimized',
+  'Automated'
+];
+
+export const startsWithActionVerb = (line: string): boolean => {
+  const trimmed = line.trim();
+  return ACTION_VERBS.some((verb) => trimmed.startsWith(`${verb} `) || trimmed === verb);
+};
+
+export const hasNumericIndicator = (line: string): boolean => containsNumericImpact(line);
+
+export const computeAtsV1 = (data: ResumeBuilderData): AtsResult => {
+  const summary = data.summary.trim();
+  const summaryChars = summary.length;
+  const summaryHasActionVerb = ACTION_VERBS.some((verb) =>
+    new RegExp(`\\b${verb}\\b`, 'i').test(summary)
+  );
+  const projectEntries = data.projects.filter(hasMeaningfulProject);
+  const experienceEntries = data.experience.filter(hasMeaningfulExperience);
+  const hasExperienceWithBullets = experienceEntries.some((entry) => splitBullets(entry.highlights).length > 0);
+  const hasEducation = data.education.some((entry) =>
+    [entry.school, entry.degree, entry.year].some((value) => value.trim().length > 0)
+  );
+  const skillsItems = getAllSkills(data);
+  const hasName = data.personal.name.trim().length > 0;
+  const hasEmail = data.personal.email.trim().length > 0;
+  const hasPhone = data.personal.phone.trim().length > 0;
+  const hasLinkedin = data.linkedin.trim().length > 0;
+  const hasGithub = data.github.trim().length > 0;
+
+  let score = 0;
+  if (hasName) {
+    score += 10;
+  }
+  if (hasEmail) {
+    score += 10;
+  }
+  if (summaryChars > 50) {
+    score += 10;
+  }
+  if (hasExperienceWithBullets) {
+    score += 15;
+  }
+  if (hasEducation) {
+    score += 10;
+  }
+  if (skillsItems.length >= 5) {
+    score += 10;
+  }
+  if (projectEntries.length >= 1) {
+    score += 10;
+  }
+  if (hasPhone) {
+    score += 5;
+  }
+  if (hasLinkedin) {
+    score += 5;
+  }
+  if (hasGithub) {
+    score += 5;
+  }
+  if (summaryHasActionVerb) {
+    score += 10;
+  }
+
+  const suggestions: string[] = [];
+  if (!hasName) {
+    suggestions.push('Add your full name (+10 points).');
+  }
+  if (!hasEmail) {
+    suggestions.push('Add your email address (+10 points).');
+  }
+  if (!(summaryChars > 50)) {
+    suggestions.push('Add a professional summary (+10 points).');
+  }
+  if (!hasExperienceWithBullets) {
+    suggestions.push('Add one experience entry with bullets (+15 points).');
+  }
+  if (!hasEducation) {
+    suggestions.push('Add at least one education entry (+10 points).');
+  }
+  if (skillsItems.length < 5) {
+    suggestions.push('Add at least 5 skills (+10 points).');
+  }
+  if (projectEntries.length < 1) {
+    suggestions.push('Add at least one project (+10 points).');
+  }
+  if (!hasPhone) {
+    suggestions.push('Add a phone number (+5 points).');
+  }
+  if (!hasLinkedin) {
+    suggestions.push('Add a LinkedIn URL (+5 points).');
+  }
+  if (!hasGithub) {
+    suggestions.push('Add a GitHub URL (+5 points).');
+  }
+  if (!summaryHasActionVerb) {
+    suggestions.push('Use action verbs in summary (+10 points).');
+  }
+
+  return {
+    score: Math.min(100, score),
+    suggestions,
+    allCriteriaMet: suggestions.length === 0
+  };
+};
+
+export const hasAnyPreviewContent = (data: ResumeBuilderData): boolean => {
+  const hasPersonal = [data.personal.name, data.personal.email, data.personal.phone, data.personal.location]
+    .some((value) => value.trim().length > 0);
+  const hasSummary = data.summary.trim().length > 0;
+  const hasEducation = data.education.some((entry) => [entry.school, entry.degree, entry.year].some((value) => value.trim().length > 0));
+  const hasExperience = data.experience.some(hasMeaningfulExperience);
+  const hasProjects = data.projects.some(hasMeaningfulProject);
+  const hasSkills = getAllSkills(data).length > 0;
+  const hasLinks = data.github.trim().length > 0 || data.linkedin.trim().length > 0;
+
+  return hasPersonal || hasSummary || hasEducation || hasExperience || hasProjects || hasSkills || hasLinks;
+};
+
+export const computeTopImprovements = (data: ResumeBuilderData): string[] => {
+  return computeAtsV1(data).suggestions.slice(0, 3);
+};
