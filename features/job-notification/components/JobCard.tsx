@@ -1,11 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Job } from '@/data/jobs'
-import Button from './Button'
-import Badge from './Badge'
-import { getMatchScoreBadgeStyle } from '@/utils/matchScore'
-import { JobStatus, getJobStatus, setJobStatus, statusColors, statusBadgeColors } from '@/utils/statusTracker'
+import { Job } from '@/features/job-notification/data/jobs'
+import Button from '@/components/Button'
+import { getMatchScoreBadgeStyle } from '@/features/job-notification/utils/matchScore'
+import { JobStatus, getJobStatus, setJobStatus, statusBadgeColors } from '@/features/job-notification/utils/statusTracker'
 
 interface JobCardProps {
   job: Job
@@ -111,7 +110,7 @@ export default function JobCard({ job, matchScore = 0, showMatchScore = false, o
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
-            <span>{job.location} • {job.mode}</span>
+            <span>{job.location} - {job.mode}</span>
           </div>
           <div className="flex items-center gap-8 font-sans text-body-base text-[#666666]">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -195,3 +194,4 @@ export default function JobCard({ job, matchScore = 0, showMatchScore = false, o
     </div>
   )
 }
+

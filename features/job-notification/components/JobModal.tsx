@@ -1,7 +1,7 @@
 'use client'
 
-import { Job } from '@/data/jobs'
-import Button from './Button'
+import { Job } from '@/features/job-notification/data/jobs'
+import Button from '@/components/Button'
 import { useEffect } from 'react'
 
 interface JobModalProps {
@@ -54,9 +54,9 @@ export default function JobModal({ job, onClose, onSave, isSaved }: JobModalProp
                 </p>
                 <div className="flex items-center gap-16 font-sans text-body-base text-[#666666]">
                   <span>{job.location}</span>
-                  <span>•</span>
+                  <span>-</span>
                   <span>{job.mode}</span>
-                  <span>•</span>
+                  <span>-</span>
                   <span>{job.experience} years</span>
                 </div>
               </div>
@@ -143,3 +143,4 @@ export default function JobModal({ job, onClose, onSave, isSaved }: JobModalProp
     </div>
   )
 }
+

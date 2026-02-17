@@ -1,4 +1,4 @@
-import { Job } from '@/data/jobs'
+import { Job } from '@/features/job-notification/data/jobs'
 
 export interface JobPreferences {
   roleKeywords: string[] // parsed from comma-separated
