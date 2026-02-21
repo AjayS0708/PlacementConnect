@@ -1,12 +1,13 @@
+import { notFound } from 'next/navigation'
 import RbStepPage from '@/features/resume-builder/pages/rb/RbStepPage'
 import { RB_STEPS } from '@/features/resume-builder/config/rbSteps'
 
-const step = RB_STEPS.find((item) => item.route.endsWith('/05-lld'))
-
-if (!step) {
-  throw new Error('RB step not found: 05-lld')
-}
-
 export default function ResumeBuilderStep() {
+  const step = RB_STEPS.find((item) => item.route.endsWith('/05-lld'))
+
+  if (!step) {
+    notFound()
+  }
+
   return <RbStepPage step={step} />
 }

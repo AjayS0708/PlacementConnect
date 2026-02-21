@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import Checkbox from '../Checkbox'
-import Input from '../Input'
-import Card from '../Card'
+import Checkbox from '@/components/Checkbox'
+import Input from '@/components/Input'
+import Card from '@/components/Card'
 
 interface ProofItem {
   id: string

@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import Card from '../Card'
-import Button from '../Button'
-import Textarea from '../Textarea'
+import Card from '@/components/Card'
+import Button from '@/components/Button'
+import Textarea from '@/components/Textarea'
 
 interface SecondaryPanelProps {
   stepTitle: string

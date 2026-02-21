@@ -153,6 +153,10 @@ function normalizeEntry(raw: unknown): AnalysisEntry | null {
 }
 
 function loadHistoryState(): HistoryLoadResult {
+  if (typeof window === 'undefined') {
+    return { entries: [], hadCorrupted: false };
+  }
+
   const parsed = safeParseJson(localStorage.getItem(HISTORY_KEY));
   if (!Array.isArray(parsed)) {
     return { entries: [], hadCorrupted: parsed !== null };
@@ -182,10 +186,12 @@ export function getHistoryWithStatus(): HistoryLoadResult {
 }
 
 export function saveHistory(entries: AnalysisEntry[]): void {
+  if (typeof window === 'undefined') return;
   localStorage.setItem(HISTORY_KEY, JSON.stringify(entries));
 }
 
 export function saveAnalysisEntry(entry: AnalysisEntry): void {
+  if (typeof window === 'undefined') return;
   const normalized = normalizeEntry(entry) || entry;
   const current = getHistory();
   const next = [normalized, ...current.filter((item) => item.id !== normalized.id)];
@@ -195,6 +201,7 @@ export function saveAnalysisEntry(entry: AnalysisEntry): void {
 }
 
 export function updateAnalysisEntry(entry: AnalysisEntry): void {
+  if (typeof window === 'undefined') return;
   const normalized = normalizeEntry(entry) || entry;
   const current = getHistory();
   const exists = current.some((item) => item.id === normalized.id);
@@ -207,19 +214,23 @@ export function updateAnalysisEntry(entry: AnalysisEntry): void {
 }
 
 export function getLatestAnalysis(): AnalysisEntry | null {
+  if (typeof window === 'undefined') return null;
   const normalized = normalizeEntry(safeParseJson(localStorage.getItem(LATEST_KEY)));
   return normalized;
 }
 
 export function setSelectedAnalysisId(id: string): void {
+  if (typeof window === 'undefined') return;
   localStorage.setItem(SELECTED_ID_KEY, id);
 }
 
 export function getSelectedAnalysisId(): string | null {
+  if (typeof window === 'undefined') return null;
   return localStorage.getItem(SELECTED_ID_KEY);
 }
 
 export function clearSelectedAnalysisId(): void {
+  if (typeof window === 'undefined') return;
   localStorage.removeItem(SELECTED_ID_KEY);
 }
 

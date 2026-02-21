@@ -4,6 +4,10 @@ const keyFor = (index: number): string => `rb_step_${index}_artifact`;
 const FINAL_SUBMISSION_KEY = 'rb_final_submission';
 
 const hasCompletedChecklist = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
   try {
     const raw = localStorage.getItem(FINAL_SUBMISSION_KEY);
     if (!raw) {
@@ -22,9 +26,15 @@ const hasCompletedChecklist = (): boolean => {
 export const rbArtifacts = {
   keyFor,
   read(index: number): string {
+    if (typeof window === 'undefined') {
+      return '';
+    }
     return localStorage.getItem(keyFor(index)) ?? '';
   },
   write(index: number, value: string): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
     const trimmed = value.trim();
     if (!trimmed) {
       localStorage.removeItem(keyFor(index));

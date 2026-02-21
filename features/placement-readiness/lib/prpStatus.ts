@@ -53,6 +53,10 @@ export function isValidHttpUrl(value: string): boolean {
 }
 
 export function getStepCompletionState(): StepCompletionState {
+  if (typeof window === 'undefined') {
+    return buildDefaultStepsState();
+  }
+
   const defaults = buildDefaultStepsState();
   const raw = localStorage.getItem(PRP_STEPS_KEY);
   if (!raw) return defaults;
@@ -72,11 +76,20 @@ export function getStepCompletionState(): StepCompletionState {
 }
 
 export function saveStepCompletionState(state: StepCompletionState): void {
+  if (typeof window === 'undefined') return;
   localStorage.setItem(PRP_STEPS_KEY, JSON.stringify(state));
   window.dispatchEvent(new Event(PRP_STATUS_EVENT));
 }
 
 export function getFinalSubmissionData(): FinalSubmissionData {
+  if (typeof window === 'undefined') {
+    return {
+      lovableProjectLink: '',
+      githubRepositoryLink: '',
+      deployedUrl: '',
+    };
+  }
+
   const defaults: FinalSubmissionData = {
     lovableProjectLink: '',
     githubRepositoryLink: '',
@@ -99,6 +112,7 @@ export function getFinalSubmissionData(): FinalSubmissionData {
 }
 
 export function saveFinalSubmissionData(data: FinalSubmissionData): void {
+  if (typeof window === 'undefined') return;
   localStorage.setItem(PRP_FINAL_SUBMISSION_KEY, JSON.stringify(data));
   window.dispatchEvent(new Event(PRP_STATUS_EVENT));
 }

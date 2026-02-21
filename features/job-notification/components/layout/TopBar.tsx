@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import Badge from '../Badge'
-import ProgressIndicator from '../ProgressIndicator'
+import Badge from '@/components/Badge'
+import ProgressIndicator from '@/components/ProgressIndicator'
 
 interface TopBarProps {
   projectName: string

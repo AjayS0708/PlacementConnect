@@ -70,6 +70,10 @@ function buildDefaultState(): ChecklistState {
 }
 
 export function getChecklistState(): ChecklistState {
+  if (typeof window === 'undefined') {
+    return buildDefaultState();
+  }
+
   const defaults = buildDefaultState();
   const raw = localStorage.getItem(TEST_CHECKLIST_STORAGE_KEY);
   if (!raw) return defaults;
@@ -89,6 +93,7 @@ export function getChecklistState(): ChecklistState {
 }
 
 export function saveChecklistState(state: ChecklistState): void {
+  if (typeof window === 'undefined') return;
   localStorage.setItem(TEST_CHECKLIST_STORAGE_KEY, JSON.stringify(state));
   window.dispatchEvent(new Event(PRP_STATUS_EVENT));
 }

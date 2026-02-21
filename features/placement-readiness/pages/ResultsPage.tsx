@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/features/placement-readiness/components/ui/card';
 import { calculateFinalScore, enrichAnalysisEntry } from '@/features/placement-readiness/lib/analysis';
 import {
@@ -121,13 +120,12 @@ async function copyTextToClipboard(text: string): Promise<boolean> {
 }
 
 export function ResultsPage() {
-  const searchParams = useSearchParams();
   const [entry, setEntry] = useState<AnalysisEntry | null>(null);
   const [confidenceMap, setConfidenceMap] = useState<SkillConfidenceMap>({});
   const [copyMessage, setCopyMessage] = useState('');
 
   useEffect(() => {
-    const id = searchParams.get('id');
+    const id = new URLSearchParams(window.location.search).get('id');
     let selected: AnalysisEntry | null = null;
 
     if (id) {
@@ -145,7 +143,7 @@ export function ResultsPage() {
     setEntry(normalized);
     setConfidenceMap(normalized.skillConfidenceMap);
     updateAnalysisEntry(normalized);
-  }, [searchParams]);
+  }, []);
 
   const finalScore = useMemo(() => {
     if (!entry) return 0;
