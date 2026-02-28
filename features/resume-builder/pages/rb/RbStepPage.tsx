@@ -41,7 +41,7 @@ export default function RbStepPage({ step }: Props) {
   const lovablePrompt = useMemo(
     () =>
       [
-        'Project: AI Resume Builder - Build Track',
+        'Project: Resume Builder - Build Track',
         `Step ${step.index} of 8: ${step.title}`,
         'Create one artifact for this step.'
       ].join('\n'),
@@ -58,7 +58,7 @@ export default function RbStepPage({ step }: Props) {
       return;
     }
     if (isLast) {
-      router.push('/resume-builder/rb/proof');
+      router.push('/resume-builder/preview');
       return;
     }
     router.push(RB_STEPS[step.index].route);
@@ -67,8 +67,8 @@ export default function RbStepPage({ step }: Props) {
   return (
     <main className="rb-page">
       <header className="rb-top-bar">
-        <div className="rb-top-left">AI Resume Builder</div>
-        <div className="rb-top-center">Project 3 - Step {step.index} of 8</div>
+        <div className="rb-top-left">Resume Builder</div>
+        <div className="rb-top-center">Step {step.index} of 8</div>
         <div className="rb-status-badge">{status}</div>
       </header>
 
@@ -89,7 +89,7 @@ export default function RbStepPage({ step }: Props) {
           />
           <div className="rb-actions-row">
             <button type="button" onClick={onUpload}>Upload Artifact</button>
-            <button type="button" onClick={onNext} disabled={!saved}>{isLast ? 'Go To Proof' : 'Next Step'}</button>
+            <button type="button" onClick={onNext} disabled={!saved}>{isLast ? 'Finish Build' : 'Next Step'}</button>
           </div>
         </section>
 
@@ -112,7 +112,7 @@ export default function RbStepPage({ step }: Props) {
       </section>
 
       <footer className="rb-proof-footer">
-        <span>Proof Footer</span>
+        <span>Build Footer</span>
         <span>{saved ? `${rbArtifacts.keyFor(step.index)} saved` : `${rbArtifacts.keyFor(step.index)} missing`}</span>
       </footer>
     </main>

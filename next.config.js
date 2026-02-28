@@ -7,10 +7,14 @@ const nextConfig = {
       { source: '/saved', destination: '/job-notifications/saved', permanent: true },
       { source: '/digest', destination: '/job-notifications/digest', permanent: true },
       { source: '/settings', destination: '/job-notifications/settings', permanent: true },
-      { source: '/proof', destination: '/job-notifications/proof', permanent: true },
+      { source: '/proof', destination: '/job-notifications', permanent: true },
       { source: '/jt/07-test', destination: '/job-notifications/test', permanent: true },
       { source: '/jt/08-ship', destination: '/job-notifications/ship', permanent: true },
-      { source: '/jt/09-proof', destination: '/job-notifications/proof', permanent: true },
+      { source: '/jt/09-proof', destination: '/job-notifications', permanent: true },
+      { source: '/job-notifications/proof', destination: '/job-notifications', permanent: true },
+      { source: '/placement-readiness/proof', destination: '/placement-readiness/resources', permanent: true },
+      { source: '/resume-builder/proof', destination: '/resume-builder/preview', permanent: true },
+      { source: '/resume-builder/rb/proof', destination: '/resume-builder/preview', permanent: true },
     ]
   },
 }

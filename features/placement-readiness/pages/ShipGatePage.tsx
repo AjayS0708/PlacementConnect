@@ -39,7 +39,7 @@ export function ShipGatePage() {
           <ul className="space-y-1 text-sm text-slate-700">
             <li>{checklistUnlocked ? 'Checklist: Passed' : 'Checklist: Pending'}</li>
             <li>{projectStatus.allStepsCompleted ? `Steps: ${PRP_STEPS.length}/${PRP_STEPS.length} complete` : 'Steps: Pending completion'}</li>
-            <li>{projectStatus.proofLinksProvided ? 'Proof links: Complete' : 'Proof links: Missing required URLs'}</li>
+            <li>{projectStatus.proofLinksProvided ? 'Submission links: Complete' : 'Submission links: Missing required URLs'}</li>
           </ul>
           <Link
             href="/placement-readiness/test-checklist"
@@ -48,10 +48,10 @@ export function ShipGatePage() {
             Open Test Checklist
           </Link>
           <Link
-            href="/placement-readiness/proof"
+            href="/placement-readiness/resources"
             className="inline-flex rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
           >
-            Open Proof Page
+            Open Resources
           </Link>
         </CardContent>
       </Card>
