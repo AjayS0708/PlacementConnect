@@ -50,8 +50,10 @@ export function DashboardPage() {
   const progress = readinessScore / readinessMax;
   const targetOffset = circumference * (1 - progress);
   const [animatedOffset, setAnimatedOffset] = useState(circumference);
+  const [chartReady, setChartReady] = useState(false);
 
   useEffect(() => {
+    setChartReady(true);
     const timer = window.setTimeout(() => setAnimatedOffset(targetOffset), 50);
     return () => window.clearTimeout(timer);
   }, [targetOffset]);
@@ -107,25 +109,29 @@ export function DashboardPage() {
         <CardContent>
           <div className="w-full overflow-x-auto">
             <div className="mx-auto h-64 min-w-[320px] sm:h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart
-                  data={skillData}
-                  cx="50%"
-                  cy="52%"
-                  outerRadius="62%"
-                  margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
-                >
-                <PolarGrid stroke="#cbd5e1" />
-                <PolarAngleAxis dataKey="skill" tick={{ fill: '#334155', fontSize: 11 }} />
-                <Radar
-                  dataKey="score"
-                  stroke="hsl(245 58% 51%)"
-                  fill="hsl(245 58% 51%)"
-                  fillOpacity={0.35}
-                  strokeWidth={2}
-                />
-                </RadarChart>
-              </ResponsiveContainer>
+              {chartReady ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart
+                    data={skillData}
+                    cx="50%"
+                    cy="52%"
+                    outerRadius="62%"
+                    margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
+                  >
+                    <PolarGrid stroke="#cbd5e1" />
+                    <PolarAngleAxis dataKey="skill" tick={{ fill: '#334155', fontSize: 11 }} />
+                    <Radar
+                      dataKey="score"
+                      stroke="hsl(245 58% 51%)"
+                      fill="hsl(245 58% 51%)"
+                      fillOpacity={0.35}
+                      strokeWidth={2}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full rounded-lg bg-slate-50" />
+              )}
             </div>
           </div>
         </CardContent>
