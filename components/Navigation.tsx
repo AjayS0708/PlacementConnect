@@ -12,13 +12,13 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/saved', label: 'Saved' },
-  { href: '/digest', label: 'Digest' },
-  { href: '/settings', label: 'Settings' },
-  { href: '/jt/09-proof', label: 'Proof' },
-  { href: '/jt/07-test', label: 'Test' },
-  { href: '/jt/08-ship', label: 'Ship', requiresTests: true },
+  { href: '/job-notifications', label: 'Dashboard' },
+  { href: '/job-notifications/saved', label: 'Saved' },
+  { href: '/job-notifications/digest', label: 'Digest' },
+  { href: '/job-notifications/settings', label: 'Settings' },
+  { href: '/job-notifications/proof', label: 'Proof' },
+  { href: '/job-notifications/test', label: 'Test' },
+  { href: '/job-notifications/ship', label: 'Ship', requiresTests: true },
 ]
 
 export default function Navigation() {
@@ -59,8 +59,8 @@ export default function Navigation() {
       <div className="max-w-[1440px] mx-auto px-40 py-24">
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center justify-between">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="font-serif text-[36px] font-bold tracking-tight text-primary hover:text-accent transition-all duration-200"
           >
             KodNest
@@ -69,7 +69,7 @@ export default function Navigation() {
             {navLinks.map((link) => {
               const isActive = pathname === link.href
               const isLocked = link.requiresTests && isShipLocked
-              
+
               if (isLocked) {
                 return (
                   <div
@@ -103,7 +103,7 @@ export default function Navigation() {
                   </div>
                 )
               }
-              
+
               return (
                 <Link
                   key={link.href}
@@ -126,8 +126,8 @@ export default function Navigation() {
         {/* Mobile Navigation */}
         <div className="md:hidden">
           <div className="flex items-center justify-between">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="font-serif text-heading-sm text-primary"
             >
               KodNest
@@ -167,7 +167,7 @@ export default function Navigation() {
               {navLinks.map((link) => {
                 const isActive = pathname === link.href
                 const isLocked = link.requiresTests && isShipLocked
-                
+
                 if (isLocked) {
                   return (
                     <div
@@ -192,7 +192,7 @@ export default function Navigation() {
                     </div>
                   )
                 }
-                
+
                 return (
                   <Link
                     key={link.href}

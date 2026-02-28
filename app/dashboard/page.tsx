@@ -1,4 +1,0 @@
-import DashboardPage from '@/features/job-notification/pages/DashboardPage'
-
-export default DashboardPage
-

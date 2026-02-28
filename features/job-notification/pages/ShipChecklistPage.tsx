@@ -26,7 +26,7 @@ export default function ShipPage() {
           const tests: TestItem[] = JSON.parse(saved)
           const passed = tests.filter(item => item.checked).length
           const total = tests.length
-          
+
           setTestsPassed(passed)
           setTotalTests(total)
           setIsLocked(passed < total)
@@ -39,11 +39,11 @@ export default function ShipPage() {
     }
 
     checkTestStatus()
-    
+
     // Re-check status when window gains focus (in case tests were updated in another tab)
     const handleFocus = () => checkTestStatus()
     window.addEventListener('focus', handleFocus)
-    
+
     return () => window.removeEventListener('focus', handleFocus)
   }, [])
 
@@ -93,7 +93,7 @@ export default function ShipPage() {
             </div>
 
             {/* Action Button */}
-            <Link href="/jt/07-test">
+            <Link href="/job-notifications/test">
               <Button variant="primary" fullWidth>
                 Go to Test Checklist
               </Button>
@@ -182,15 +182,15 @@ export default function ShipPage() {
 
           {/* Action Buttons */}
           <div className="flex gap-16 justify-center">
-            <Link href="/jt/07-test">
+            <Link href="/job-notifications/test">
               <Button variant="secondary">
                 Review Tests
               </Button>
             </Link>
-            <Button 
+            <Button
               variant="primary"
               onClick={() => {
-                alert('🚀 Ship process would begin here!\n\nIn production, this would trigger your deployment pipeline.')
+                alert('Ship process would begin here!\n\nIn production, this would trigger your deployment pipeline.')
               }}
             >
               Ship to Production
