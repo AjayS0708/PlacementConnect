@@ -9,8 +9,6 @@ const items = [
   { href: '/job-notifications/saved', label: 'Saved' },
   { href: '/job-notifications/digest', label: 'Digest' },
   { href: '/job-notifications/settings', label: 'Settings' },
-  { href: '/job-notifications/test', label: 'Test' },
-  { href: '/job-notifications/ship', label: 'Ship' },
 ]
 
 export default function JobSectionNav() {
