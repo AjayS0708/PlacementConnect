@@ -10,6 +10,7 @@ import {
 } from '@/features/placement-readiness/lib/assessments';
 import { getSelectedOrLatestAnalysis } from '@/features/placement-readiness/lib/storage';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/features/placement-readiness/components/ui/card';
+import { SoftSkillsAssessment } from '@/features/placement-readiness/components/SoftSkillsAssessment';
 
 type AssessmentsState = {
   analysisId: string;
@@ -45,7 +46,19 @@ export function AssessmentsPage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Assessments</CardTitle>
+          <CardTitle>Soft Skills Assessment</CardTitle>
+          <CardDescription>
+            Evaluate your communication, leadership, teamwork, and other essential soft skills for placement success
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SoftSkillsAssessment />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Company-Specific Mock Assessments</CardTitle>
           <CardDescription>
             Personalized mock assessments for {active?.company || 'your target company'} {active?.role ? `| ${active.role}` : ''}
           </CardDescription>
