@@ -9,6 +9,8 @@ import Card from '@/components/Card'
 import Input from '@/components/Input'
 import Checkbox from '@/components/Checkbox'
 import Toast from '@/components/Toast'
+import { SkeletonJobCard, SkeletonStatCard } from '@/components/Skeleton'
+import { FilterEmptyState } from '@/components/EmptyState'
 import { calculateMatchScore, getPreferencesFromStorage, JobPreferences } from '@/features/job-notification/utils/matchScore'
 import { JobStatus, getJobStatus } from '@/features/job-notification/utils/statusTracker'
 
@@ -33,6 +35,7 @@ export default function DashboardPage() {
   const [sortBy, setSortBy] = useState('matchScore')
   const [showOnlyMatches, setShowOnlyMatches] = useState(false)
   const [toasts, setToasts] = useState<ToastData[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const showToast = (message: string, type: 'success' | 'info' | 'warning' | 'error' = 'success') => {
     const id = Date.now().toString()
@@ -43,15 +46,26 @@ export default function DashboardPage() {
     setToasts(prev => prev.filter(toast => toast.id !== id))
   }
 
-  // Load saved jobs and preferences from localStorage
+  // Simulate initial loading and load data from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('savedJobs')
-    if (saved) {
-      setSavedJobs(JSON.parse(saved))
+    const loadData = async () => {
+      setIsLoading(true)
+      
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 1200))
+      
+      const saved = localStorage.getItem('savedJobs')
+      if (saved) {
+        setSavedJobs(JSON.parse(saved))
+      }
+
+      const prefs = getPreferencesFromStorage()
+      setPreferences(prefs)
+      
+      setIsLoading(false)
     }
 
-    const prefs = getPreferencesFromStorage()
-    setPreferences(prefs)
+    loadData()
   }, [])
 
   const handleSaveJob = (jobId: string) => {
@@ -338,7 +352,25 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Jobs Grid */}
-      {filteredJobs.length > 0 ? (
+      {isLoading ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+        >
+          {Array.from({ length: 6 }).map((_, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + index * 0.05 }}
+            >
+              <SkeletonJobCard />
+            </motion.div>
+          ))}
+        </motion.div>
+      ) : filteredJobs.length > 0 ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -365,31 +397,9 @@ export default function DashboardPage() {
           ))}
         </motion.div>
       ) : (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card padding="lg" className="shadow-elevation-2">
-            <div className="flex min-h-[300px] items-center justify-center">
-              <div className="space-y-6 text-center">
-                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200">
-                  <svg className="h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-xl font-semibold text-slate-900">
-                    No roles match your criteria
-                  </p>
-                  <p className="text-sm text-slate-600">
-                    Adjust filters or lower threshold to see more results.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </motion.div>
+        <Card padding="lg" className="shadow-elevation-2">
+          <FilterEmptyState />
+        </Card>
       )}
 
       {/* Job Modal */}
