@@ -229,18 +229,18 @@ export function ResumeManager({ onResumeChange, className }: ResumeManagerProps)
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-md"
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-md"
               onClick={() => setIsOpen(false)}
-            />
-
-            {/* Modal Content - Redesigned */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 40 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed left-1/2 top-1/2 z-[110] flex max-h-[85vh] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border-2 border-slate-300 bg-gradient-to-br from-white via-slate-50 to-purple-50 shadow-2xl"
             >
+              {/* Modal Content - Redesigned */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative z-[110] flex max-h-[85vh] w-[90vw] max-w-4xl flex-col overflow-hidden rounded-2xl border-2 border-slate-300 bg-gradient-to-br from-white via-slate-50 to-purple-50 shadow-2xl"
+              >
               {/* Header - Redesigned */}
               <div className="relative flex-shrink-0 overflow-hidden border-b-2 border-slate-200 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 px-6 py-4">
                 {/* Decorative background patterns */}
@@ -640,6 +640,7 @@ export function ResumeManager({ onResumeChange, className }: ResumeManagerProps)
                 )}
               </div>
             </motion.div>
+          </motion.div>
           </>
         )}
       </AnimatePresence>
