@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { jobs, Job } from '@/features/job-notification/data/jobs'
 import JobCard from '@/features/job-notification/components/JobCard'
 import JobModal from '@/features/job-notification/components/JobModal'
@@ -139,187 +140,256 @@ export default function DashboardPage() {
   }, [jobsWithScores, keyword, location, mode, experience, source, status, sortBy, showOnlyMatches, preferences])
 
   return (
-    <div className="max-w-[1400px] mx-auto space-y-40">
-      <div className="space-y-24">
-        <h1 className="font-serif text-[56px] font-bold text-primary leading-tight">
-          Dashboard
-        </h1>
-        <div className="flex items-center gap-24">
-          <p className="font-sans text-[18px] text-[#666666]">
-            {filteredJobs.length} jobs found
-          </p>
-          {preferences && filteredJobs.length > 0 && (
-            <div className="flex items-center gap-16">
-              <span className="text-[#CCCCCC]">-</span>
-              <div className="flex items-center gap-16">
-                <div className="font-sans text-[15px] text-[#999999]">
-                  Avg Match: <span className="font-semibold text-primary">{Math.round(filteredJobs.reduce((sum, j) => sum + j.matchScore, 0) / filteredJobs.length)}%</span>
+    <div className="max-w-[1400px] mx-auto space-y-8">
+      {/* Header Section with Stats */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative overflow-hidden rounded-3xl border-2 border-slate-200 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-8 shadow-elevation-3"
+      >
+        <div className="absolute right-0 top-0 h-48 w-48 translate-x-12 -translate-y-12 rounded-full bg-gradient-to-br from-blue-500/20 to-indigo-500/20 blur-3xl" />
+        
+        <div className="relative">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="rounded-lg bg-gradient-to-br from-blue-500 to-indigo-500 p-2.5">
+              <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h1 className="text-4xl font-bold text-slate-900">
+              Job Notifications
+            </h1>
+          </div>
+          
+          <div className="flex flex-wrap items-center gap-6">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl font-bold bg-gradient-to-br from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                {filteredJobs.length}
+              </span>
+              <span className="text-sm font-medium text-slate-600">
+                jobs found
+              </span>
+            </div>
+            
+            {preferences && filteredJobs.length > 0 && (
+              <>
+                <div className="h-8 w-px bg-slate-300" />
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-slate-600">Avg Match:</span>
+                  <span className="rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-3 py-1 text-sm font-semibold text-white">
+                    {Math.round(filteredJobs.reduce((sum, j) => sum + j.matchScore, 0) / filteredJobs.length)}%
+                  </span>
                 </div>
-                <span className="text-[#CCCCCC]">-</span>
-                <div className="font-sans text-[15px] text-[#999999]">
-                  Best: <span className="font-semibold text-primary">{Math.max(...filteredJobs.map(j => j.matchScore))}%</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-slate-600">Best:</span>
+                  <span className="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-3 py-1 text-sm font-semibold text-white">
+                    {Math.max(...filteredJobs.map(j => j.matchScore))}%
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Banner if preferences not set */}
+      <AnimatePresence>
+        {!preferences && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+          >
+            <div className="overflow-hidden rounded-2xl border-2 border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-6 shadow-elevation-2">
+              <div className="flex items-start gap-4">
+                <div className="rounded-full bg-gradient-to-br from-amber-500 to-orange-500 p-2.5 text-white">
+                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-amber-900">
+                    Set your preferences to activate intelligent matching
+                  </p>
+                  <p className="mt-1 text-sm text-amber-700">
+                    Visit Settings to configure your job preferences and enable smart match scoring.
+                  </p>
                 </div>
               </div>
             </div>
-          )}
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Banner if preferences not set */}
-      {!preferences && (
-        <Card padding="md" className="bg-[#FFF8E1] border-[#FFA726] rounded-lg">
-          <div className="flex items-start gap-16">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F57C00" strokeWidth="2" className="flex-shrink-0">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-            <div>
-              <p className="font-sans text-[16px] text-primary font-semibold">
-                Set your preferences to activate intelligent matching.
-              </p>
-              <p className="font-sans text-[14px] text-[#666666] mt-4">
-                Visit Settings to configure your job preferences and enable smart match scoring.
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
-
-      {/* Filters */}
-      <Card padding="lg">
-        <div className="space-y-24">
-          <Input
-            placeholder="Search by title, company, or description..."
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            fullWidth
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-16">
-            <select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="px-16 py-16 border border-[#E5E7EB] bg-white font-sans text-body-base text-primary transition-all duration-200 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-20 rounded-lg shadow-sm cursor-pointer"
-            >
-              {locations.map(loc => (
-                <option key={loc} value={loc}>
-                  {loc === 'all' ? 'All Locations' : loc}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={mode}
-              onChange={(e) => setMode(e.target.value)}
-              className="px-16 py-16 border border-[#E5E7EB] bg-white font-sans text-body-base text-primary transition-all duration-200 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-20 rounded-lg shadow-sm cursor-pointer"
-            >
-              <option value="all">All Modes</option>
-              <option value="Remote">Remote</option>
-              <option value="Hybrid">Hybrid</option>
-              <option value="Onsite">Onsite</option>
-            </select>
-
-            <select
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
-              className="px-16 py-16 border border-[#E5E7EB] bg-white font-sans text-body-base text-primary transition-all duration-200 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-20 rounded-lg shadow-sm cursor-pointer"
-            >
-              <option value="all">All Experience</option>
-              <option value="Fresher">Fresher</option>
-              <option value="0-1">0-1 years</option>
-              <option value="1-3">1-3 years</option>
-              <option value="3-5">3-5 years</option>
-            </select>
-
-            <select
-              value={source}
-              onChange={(e) => setSource(e.target.value)}
-              className="px-16 py-16 border border-[#E5E7EB] bg-white font-sans text-body-base text-primary transition-all duration-200 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-20 rounded-lg shadow-sm cursor-pointer"
-            >
-              <option value="all">All Sources</option>
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="Naukri">Naukri</option>
-              <option value="Indeed">Indeed</option>
-            </select>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-16 py-16 border border-[#E5E7EB] bg-white font-sans text-body-base text-primary transition-all duration-200 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-20 rounded-lg shadow-sm cursor-pointer"
-            >
-              <option value="latest">Latest First</option>
-              <option value="matchScore">Match Score</option>
-              <option value="salary">Salary</option>
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-16">
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="px-16 py-16 border border-[#E5E7EB] bg-white font-sans text-body-base text-primary transition-all duration-200 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-20 rounded-lg shadow-sm cursor-pointer"
-            >
-              <option value="all">All Statuses</option>
-              <option value="Not Applied">Not Applied</option>
-              <option value="Applied">Applied</option>
-              <option value="Rejected">Rejected</option>
-              <option value="Selected">Selected</option>
-            </select>
-          </div>
-
-          {/* Show only matches toggle */}
-          {preferences && (
-            <div className="pt-16 border-t border-border">
-              <Checkbox
-                checked={showOnlyMatches}
-                onChange={setShowOnlyMatches}
-                label={
-                  <span className="font-sans text-body-base">
-                    Show only jobs above my threshold ({preferences.minMatchScore}%)
-                  </span>
-                }
+      {/* Filters Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        <Card padding="lg" className="shadow-elevation-2">
+          <div className="space-y-6">
+            {/* Search Bar */}
+            <div className="relative">
+              <svg className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <Input
+                placeholder="Search by title, company, or description..."
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                fullWidth
+                className="pl-12"
               />
             </div>
-          )}
-        </div>
-      </Card>
+
+            {/* Filter Dropdowns */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              <select
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                {locations.map(loc => (
+                  <option key={loc} value={loc}>
+                    {loc === 'all' ? 'All Locations' : loc}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={mode}
+                onChange={(e) => setMode(e.target.value)}
+                className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="all">All Modes</option>
+                <option value="Remote">Remote</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Onsite">Onsite</option>
+              </select>
+
+              <select
+                value={experience}
+                onChange={(e) => setExperience(e.target.value)}
+                className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="all">All Experience</option>
+                <option value="Fresher">Fresher</option>
+                <option value="0-1">0-1 years</option>
+                <option value="1-3">1-3 years</option>
+                <option value="3-5">3-5 years</option>
+              </select>
+
+              <select
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="all">All Sources</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Naukri">Naukri</option>
+                <option value="Indeed">Indeed</option>
+              </select>
+
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="latest">Latest First</option>
+                <option value="matchScore">Match Score</option>
+                <option value="salary">Salary</option>
+              </select>
+            </div>
+
+            {/* Additional Filters */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="all">All Statuses</option>
+                <option value="Not Applied">Not Applied</option>
+                <option value="Applied">Applied</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Selected">Selected</option>
+              </select>
+            </div>
+
+            {/* Show only matches toggle */}
+            {preferences && (
+              <div className="rounded-xl border-t-2 border-slate-200 pt-4">
+                <Checkbox
+                  checked={showOnlyMatches}
+                  onChange={setShowOnlyMatches}
+                  label={
+                    <span className="text-sm font-medium text-slate-700">
+                      Show only jobs above my threshold (
+                      <span className="font-bold text-blue-600">{preferences.minMatchScore}%</span>
+                      )
+                    </span>
+                  }
+                />
+              </div>
+            )}
+          </div>
+        </Card>
+      </motion.div>
 
       {/* Jobs Grid */}
       {filteredJobs.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-24">
-          {filteredJobs.map(job => (
-            <JobCard
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+        >
+          {filteredJobs.map((job, index) => (
+            <motion.div
               key={job.id}
-              job={job}
-              matchScore={job.matchScore}
-              showMatchScore={preferences !== null}
-              onView={() => setSelectedJob(job)}
-              onSave={() => handleSaveJob(job.id)}
-              isSaved={savedJobs.includes(job.id)}
-              onStatusChange={(status) => showToast(`Status updated: ${status}`, 'success')}
-            />
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + index * 0.05 }}
+            >
+              <JobCard
+                job={job}
+                matchScore={job.matchScore}
+                showMatchScore={preferences !== null}
+                onView={() => setSelectedJob(job)}
+                onSave={() => handleSaveJob(job.id)}
+                isSaved={savedJobs.includes(job.id)}
+                onStatusChange={(status) => showToast(`Status updated: ${status}`, 'success')}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       ) : (
-        <Card padding="lg">
-          <div className="min-h-[300px] flex items-center justify-center">
-            <div className="text-center space-y-16">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#CCCCCC" strokeWidth="1.5" className="mx-auto">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
-              <div className="space-y-8">
-                <p className="font-sans text-body-lg font-medium text-primary">
-                  No roles match your criteria
-                </p>
-                <p className="font-sans text-body-base text-[#666666]">
-                  Adjust filters or lower threshold to see more results.
-                </p>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Card padding="lg" className="shadow-elevation-2">
+            <div className="flex min-h-[300px] items-center justify-center">
+              <div className="space-y-6 text-center">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200">
+                  <svg className="h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-xl font-semibold text-slate-900">
+                    No roles match your criteria
+                  </p>
+                  <p className="text-sm text-slate-600">
+                    Adjust filters or lower threshold to see more results.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </motion.div>
       )}
 
       {/* Job Modal */}
