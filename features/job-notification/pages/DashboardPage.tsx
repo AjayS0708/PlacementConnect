@@ -16,6 +16,10 @@ import { JobStatus, getJobStatus } from '@/features/job-notification/utils/statu
 import { SmartSearchBar } from '@/features/job-notification/components/SmartSearchBar'
 import { FilterPillGroup, MultiSelectFilter } from '@/features/job-notification/components/FilterPillGroup'
 import { FilterPresets } from '@/features/job-notification/components/FilterPresets'
+import { PaginationControls } from '@/features/job-notification/components/PaginationControls'
+import { SortingControls } from '@/features/job-notification/components/SortingControls'
+import { calculateMatchScoreWithBreakdown, getCustomWeights } from '@/features/job-notification/utils/advancedMatching'
+import { paginateItems, sortJobs, JobSortOption, getSortPreference, saveSortPreference, getPaginationSettings, savePaginationSettings, JobWithScore as JobWithScoreType } from '@/features/job-notification/utils/jobFiltering'
 
 type JobWithScore = Job & { matchScore: number }
 
@@ -37,10 +41,12 @@ export default function DashboardPage() {
   const [experience, setExperience] = useState('all')
   const [source, setSource] = useState('all')
   const [status, setStatus] = useState('all')
-  const [sortBy, setSortBy] = useState('matchScore')
+  const [sortOption, setSortOption] = useState<JobSortOption>('match-desc')
   const [showOnlyMatches, setShowOnlyMatches] = useState(false)
   const [toasts, setToasts] = useState<ToastData[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
 
   const showToast = (message: string, type: 'success' | 'info' | 'warning' | 'error' = 'success') => {
     const id = Date.now().toString()
@@ -67,6 +73,14 @@ export default function DashboardPage() {
       const prefs = getPreferencesFromStorage()
       setPreferences(prefs)
       
+      // Load sort preference
+      const savedSortOption = getSortPreference()
+      setSortOption(savedSortOption)
+      
+      // Load pagination settings
+      const paginationSettings = getPaginationSettings()
+      setItemsPerPage(paginationSettings.itemsPerPage)
+      
       setIsLoading(false)
     }
 
@@ -81,6 +95,28 @@ export default function DashboardPage() {
     setSavedJobs(newSavedJobs)
     localStorage.setItem('savedJobs', JSON.stringify(newSavedJobs))
   }
+
+  // Pagination and sorting handlers
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleItemsPerPageChange = (items: number) => {
+    setItemsPerPage(items)
+    setCurrentPage(1) // Reset to first page
+    savePaginationSettings(items)
+  }
+
+  const handleSortChange = (newSortOption: JobSortOption) => {
+    setSortOption(newSortOption)
+    saveSortPreference(newSortOption)
+  }
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [keyword, selectedLocations, location, mode, experience, selectedSources, source, status, showOnlyMatches])
 
   // Get unique values for filters
   const locations = useMemo(() => {
@@ -149,24 +185,16 @@ export default function DashboardPage() {
       filtered = filtered.filter(job => job.matchScore >= preferences.minMatchScore)
     }
 
-    // Sort
-    if (sortBy === 'latest') {
-      filtered = [...filtered].sort((a, b) => a.postedDaysAgo - b.postedDaysAgo)
-    } else if (sortBy === 'matchScore') {
-      filtered = [...filtered].sort((a, b) => b.matchScore - a.matchScore)
-    } else if (sortBy === 'salary') {
-      filtered = [...filtered].sort((a, b) => {
-        // Extract numeric values from salary strings for simple comparison
-        const extractNumber = (str: string) => {
-          const digits = str.replace(/[^0-9]/g, '')
-          return digits ? parseInt(digits, 10) : 0
-        }
-        return extractNumber(b.salaryRange) - extractNumber(a.salaryRange)
-      })
-    }
+    // Sort using new advanced sorting
+    const sorted = sortJobs(filtered as JobWithScoreType[], sortOption)
 
-    return filtered
-  }, [jobsWithScores, keyword, selectedLocations, location, mode, experience, selectedSources, source, status, sortBy, showOnlyMatches, preferences])
+    return sorted
+  }, [jobsWithScores, keyword, selectedLocations, location, mode, experience, selectedSources, source, status, sortOption, showOnlyMatches, preferences])
+
+  // Paginated jobs
+  const paginatedResult = useMemo(() => {
+    return paginateItems(filteredJobs, currentPage, itemsPerPage)
+  }, [filteredJobs, currentPage, itemsPerPage])
 
   // Get active filter pills
   const activeFilterPills = useMemo(() => {
@@ -258,7 +286,7 @@ export default function DashboardPage() {
     experience,
     source,
     status,
-    sortBy,
+    sortOption,
     showOnlyMatches,
   })
 
@@ -271,7 +299,7 @@ export default function DashboardPage() {
     setExperience(filters.experience || 'all')
     setSource(filters.source || 'all')
     setStatus(filters.status || 'all')
-    setSortBy(filters.sortBy || 'matchScore')
+    setSortOption(filters.sortOption || 'match-desc')
     setShowOnlyMatches(filters.showOnlyMatches || false)
     
     showToast('Preset loaded successfully!', 'success')
@@ -464,15 +492,12 @@ export default function DashboardPage() {
                 <option value="Selected">🟢 Selected</option>
               </select>
 
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              >
-                <option value="latest">📅 Latest First</option>
-                <option value="matchScore">🎯 Best Match</option>
-                <option value="salary">💰 Highest Salary</option>
-              </select>
+              <div className="sm:col-span-2 lg:col-span-2">
+                <SortingControls
+                  sortOption={sortOption}
+                  onSortChange={handleSortChange}
+                />
+              </div>
 
               {preferences && (
                 <div className="flex items-center rounded-xl border-2 border-slate-200 bg-white px-4 py-3">
@@ -512,31 +537,52 @@ export default function DashboardPage() {
           ))}
         </motion.div>
       ) : filteredJobs.length > 0 ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
-        >
-          {filteredJobs.map((job, index) => (
-            <motion.div
-              key={job.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 + index * 0.05 }}
-            >
-              <JobCard
-                job={job}
-                matchScore={job.matchScore}
-                showMatchScore={preferences !== null}
-                onView={() => setSelectedJob(job)}
-                onSave={() => handleSaveJob(job.id)}
-                isSaved={savedJobs.includes(job.id)}
-                onStatusChange={(status) => showToast(`Status updated: ${status}`, 'success')}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+          >
+            {paginatedResult.items.map((job, index) => (
+              <motion.div
+                key={job.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + index * 0.05 }}
+              >
+                <JobCard
+                  job={job}
+                  matchScore={job.matchScore}
+                  showMatchScore={preferences !== null}
+                  onView={() => setSelectedJob(job)}
+                  onSave={() => handleSaveJob(job.id)}
+                  isSaved={savedJobs.includes(job.id)}
+                  onStatusChange={(status) => showToast(`Status updated: ${status}`, 'success')}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+          
+          {/* Pagination Controls */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="mt-8"
+          >
+            <PaginationControls
+              currentPage={paginatedResult.pagination.currentPage}
+              totalPages={paginatedResult.pagination.totalPages}
+              onPageChange={handlePageChange}
+              itemsPerPage={itemsPerPage}
+              onItemsPerPageChange={handleItemsPerPageChange}
+              totalItems={paginatedResult.pagination.totalItems}
+              startIndex={paginatedResult.pagination.startIndex}
+              endIndex={paginatedResult.pagination.endIndex}
+            />
+          </motion.div>
+        </>
       ) : (
         <Card padding="lg" className="shadow-elevation-2">
           <FilterEmptyState />
