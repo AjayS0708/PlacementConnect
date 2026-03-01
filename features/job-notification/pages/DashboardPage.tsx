@@ -13,6 +13,9 @@ import { SkeletonJobCard, SkeletonStatCard } from '@/components/Skeleton'
 import { FilterEmptyState } from '@/components/EmptyState'
 import { calculateMatchScore, getPreferencesFromStorage, JobPreferences } from '@/features/job-notification/utils/matchScore'
 import { JobStatus, getJobStatus } from '@/features/job-notification/utils/statusTracker'
+import { SmartSearchBar } from '@/features/job-notification/components/SmartSearchBar'
+import { FilterPillGroup, MultiSelectFilter } from '@/features/job-notification/components/FilterPillGroup'
+import { FilterPresets } from '@/features/job-notification/components/FilterPresets'
 
 type JobWithScore = Job & { matchScore: number }
 
@@ -27,6 +30,8 @@ export default function DashboardPage() {
   const [savedJobs, setSavedJobs] = useState<string[]>([])
   const [preferences, setPreferences] = useState<JobPreferences | null>(null)
   const [keyword, setKeyword] = useState('')
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([])
+  const [selectedSources, setSelectedSources] = useState<string[]>([])
   const [location, setLocation] = useState('all')
   const [mode, setMode] = useState('all')
   const [experience, setExperience] = useState('all')
@@ -104,7 +109,12 @@ export default function DashboardPage() {
       )
     }
 
-    // Filter by location (AND)
+    // Filter by multi-select locations
+    if (selectedLocations.length > 0) {
+      filtered = filtered.filter(job => selectedLocations.includes(job.location))
+    }
+
+    // Filter by location (AND) - keep for backward compatibility
     if (location !== 'all') {
       filtered = filtered.filter(job => job.location === location)
     }
@@ -119,7 +129,12 @@ export default function DashboardPage() {
       filtered = filtered.filter(job => job.experience === experience)
     }
 
-    // Filter by source (AND)
+    // Filter by multi-select sources
+    if (selectedSources.length > 0) {
+      filtered = filtered.filter(job => selectedSources.includes(job.source))
+    }
+
+    // Filter by source (AND) - keep for backward compatibility
     if (source !== 'all') {
       filtered = filtered.filter(job => job.source === source)
     }
@@ -151,7 +166,116 @@ export default function DashboardPage() {
     }
 
     return filtered
-  }, [jobsWithScores, keyword, location, mode, experience, source, status, sortBy, showOnlyMatches, preferences])
+  }, [jobsWithScores, keyword, selectedLocations, location, mode, experience, selectedSources, source, status, sortBy, showOnlyMatches, preferences])
+
+  // Get active filter pills
+  const activeFilterPills = useMemo(() => {
+    const pills: Array<{ id: string; label: string; value: string; category: string }> = []
+    
+    selectedLocations.forEach((loc) => {
+      pills.push({ id: `location-${loc}`, label: loc, value: loc, category: 'Location' })
+    })
+    
+    selectedSources.forEach((src) => {
+      pills.push({ id: `source-${src}`, label: src, value: src, category: 'Source' })
+    })
+    
+    if (mode !== 'all') pills.push({ id: 'mode', label: mode, value: mode, category: 'Mode' })
+    if (experience !== 'all') pills.push({ id: 'experience', label: experience, value: experience, category: 'Experience' })
+    if (status !== 'all') pills.push({ id: 'status', label: status, value: status, category: 'Status' })
+    
+    return pills
+  }, [selectedLocations, selectedSources, mode, experience, status])
+
+  const handleRemoveFilter = (filterId: string) => {
+    if (filterId.startsWith('location-')) {
+      const loc = filterId.replace('location-', '')
+      setSelectedLocations(selectedLocations.filter((l) => l !== loc))
+    } else if (filterId.startsWith('source-')) {
+      const src = filterId.replace('source-', '')
+      setSelectedSources(selectedSources.filter((s) => s !== src))
+    } else if (filterId === 'mode') {
+      setMode('all')
+    } else if (filterId === 'experience') {
+      setExperience('all')
+    } else if (filterId === 'status') {
+      setStatus('all')
+    }
+  }
+
+  const handleClearAllFilters = () => {
+    setSelectedLocations([])
+    setSelectedSources([])
+    setLocation('all')
+    setMode('all')
+    setExperience('all')
+    setSource('all')
+    setStatus('all')
+    setShowOnlyMatches(false)
+  }
+
+  // Generate search suggestions
+  const searchSuggestions = useMemo(() => {
+    if (!keyword || keyword.length < 2) return []
+    
+    const suggestions: Array<{ id: string; text: string; category: 'job' | 'company' | 'location' }> = []
+    const lowerKeyword = keyword.toLowerCase()
+    
+    // Job title suggestions
+    jobs.forEach((job) => {
+      if (job.title.toLowerCase().includes(lowerKeyword) && 
+          !suggestions.some(s => s.text === job.title)) {
+        suggestions.push({ id: `job-${job.id}`, text: job.title, category: 'job' })
+      }
+    })
+    
+    // Company suggestions
+    jobs.forEach((job) => {
+      if (job.company.toLowerCase().includes(lowerKeyword) && 
+          !suggestions.some(s => s.text === job.company)) {
+        suggestions.push({ id: `company-${job.company}`, text: job.company, category: 'company' })
+      }
+    })
+    
+    // Location suggestions
+    jobs.forEach((job) => {
+      if (job.location.toLowerCase().includes(lowerKeyword) && 
+          !suggestions.some(s => s.text === job.location)) {
+        suggestions.push({ id: `location-${job.location}`, text: job.location, category: 'location' })
+      }
+    })
+    
+    return suggestions.slice(0, 8) // Limit to 8 suggestions
+  }, [keyword])
+
+  // Get current filters for preset saving
+  const getCurrentFilters = () => ({
+    keyword,
+    selectedLocations,
+    selectedSources,
+    location,
+    mode,
+    experience,
+    source,
+    status,
+    sortBy,
+    showOnlyMatches,
+  })
+
+  const handleLoadPreset = (filters: Record<string, any>) => {
+    setKeyword(filters.keyword || '')
+    setSelectedLocations(filters.selectedLocations || [])
+    setSelectedSources(filters.selectedSources || [])
+    setLocation(filters.location || 'all')
+    setMode(filters.mode || 'all')
+    setExperience(filters.experience || 'all')
+    setSource(filters.source || 'all')
+    setStatus(filters.status || 'all')
+    setSortBy(filters.sortBy || 'matchScore')
+    setShowOnlyMatches(filters.showOnlyMatches || false)
+    
+    showToast('Preset loaded successfully!', 'success')
+  }
 
   return (
     <div className="max-w-[1400px] mx-auto space-y-8">
@@ -243,33 +367,64 @@ export default function DashboardPage() {
       >
         <Card padding="lg" className="shadow-elevation-2">
           <div className="space-y-6">
-            {/* Search Bar */}
-            <div className="relative">
-              <svg className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <Input
-                placeholder="Search by title, company, or description..."
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                fullWidth
-                className="pl-12"
+            {/* Search Bar with Autocomplete */}
+            <SmartSearchBar
+              value={keyword}
+              onChange={setKeyword}
+              onSearch={(value) => setKeyword(value)}
+              placeholder="Search by title, company, location, or skills..."
+              suggestions={searchSuggestions}
+              onSuggestionClick={(suggestion) => {
+                setKeyword(suggestion.text)
+              }}
+              showRecentSearches={true}
+            />
+
+            {/* Active Filter Pills */}
+            <FilterPillGroup
+              filters={activeFilterPills}
+              onRemove={handleRemoveFilter}
+              onClearAll={handleClearAllFilters}
+            />
+
+            {/* Filter Presets */}
+            <div className="flex justify-end">
+              <FilterPresets
+                currentFilters={getCurrentFilters()}
+                onLoadPreset={handleLoadPreset}
               />
             </div>
 
-            {/* Filter Dropdowns */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              <select
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              >
-                {locations.map(loc => (
-                  <option key={loc} value={loc}>
-                    {loc === 'all' ? 'All Locations' : loc}
-                  </option>
-                ))}
-              </select>
+            {/* Multi-Select Filters */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <MultiSelectFilter
+                label="Locations"
+                options={locations.slice(1).map((loc) => ({ value: loc, label: loc }))}
+                selected={selectedLocations}
+                onChange={setSelectedLocations}
+                icon={
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                }
+              />
+
+              <MultiSelectFilter
+                label="Sources"
+                options={[
+                  { value: 'LinkedIn', label: 'LinkedIn' },
+                  { value: 'Naukri', label: 'Naukri' },
+                  { value: 'Indeed', label: 'Indeed' },
+                ]}
+                selected={selectedSources}
+                onChange={setSelectedSources}
+                icon={
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                }
+              />
 
               <select
                 value={mode}
@@ -277,9 +432,9 @@ export default function DashboardPage() {
                 className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               >
                 <option value="all">All Modes</option>
-                <option value="Remote">Remote</option>
-                <option value="Hybrid">Hybrid</option>
-                <option value="Onsite">Onsite</option>
+                <option value="Remote">🏠 Remote</option>
+                <option value="Hybrid">🔄 Hybrid</option>
+                <option value="Onsite">🏢 Onsite</option>
               </select>
 
               <select
@@ -288,21 +443,25 @@ export default function DashboardPage() {
                 className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               >
                 <option value="all">All Experience</option>
-                <option value="Fresher">Fresher</option>
-                <option value="0-1">0-1 years</option>
-                <option value="1-3">1-3 years</option>
-                <option value="3-5">3-5 years</option>
+                <option value="Fresher">✨ Fresher</option>
+                <option value="0-1">📝 0-1 years</option>
+                <option value="1-3">📈 1-3 years</option>
+                <option value="3-5">🚀 3-5 years</option>
               </select>
+            </div>
 
+            {/* Additional Filters Row */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <select
-                value={source}
-                onChange={(e) => setSource(e.target.value)}
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
                 className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               >
-                <option value="all">All Sources</option>
-                <option value="LinkedIn">LinkedIn</option>
-                <option value="Naukri">Naukri</option>
-                <option value="Indeed">Indeed</option>
+                <option value="all">All Application Statuses</option>
+                <option value="Not Applied">⚪ Not Applied</option>
+                <option value="Applied">🔵 Applied</option>
+                <option value="Rejected">🔴 Rejected</option>
+                <option value="Selected">🟢 Selected</option>
               </select>
 
               <select
@@ -310,43 +469,25 @@ export default function DashboardPage() {
                 onChange={(e) => setSortBy(e.target.value)}
                 className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               >
-                <option value="latest">Latest First</option>
-                <option value="matchScore">Match Score</option>
-                <option value="salary">Salary</option>
+                <option value="latest">📅 Latest First</option>
+                <option value="matchScore">🎯 Best Match</option>
+                <option value="salary">💰 Highest Salary</option>
               </select>
-            </div>
 
-            {/* Additional Filters */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-all hover:border-blue-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-              >
-                <option value="all">All Statuses</option>
-                <option value="Not Applied">Not Applied</option>
-                <option value="Applied">Applied</option>
-                <option value="Rejected">Rejected</option>
-                <option value="Selected">Selected</option>
-              </select>
+              {preferences && (
+                <div className="flex items-center rounded-xl border-2 border-slate-200 bg-white px-4 py-3">
+                  <Checkbox
+                    checked={showOnlyMatches}
+                    onChange={setShowOnlyMatches}
+                    label={
+                      <span className="text-sm font-medium text-slate-700">
+                        Only ≥{preferences.minMatchScore}% match
+                      </span>
+                    }
+                  />
+                </div>
+              )}
             </div>
-
-            {/* Show only matches toggle */}
-            {preferences && (
-              <div className="rounded-xl border-t-2 border-slate-200 pt-4">
-                <Checkbox
-                  checked={showOnlyMatches}
-                  onChange={setShowOnlyMatches}
-                  label={
-                    <span className="text-sm font-medium text-slate-700">
-                      Show only jobs above my threshold (
-                      <span className="font-bold text-blue-600">{preferences.minMatchScore}%</span>
-                      )
-                    </span>
-                  }
-                />
-              </div>
-            )}
           </div>
         </Card>
       </motion.div>
