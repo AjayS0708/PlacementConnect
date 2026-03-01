@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { ResumeManager } from '@/features/resume-builder/components/ResumeManager';
 
 export default function HomePage() {
   return (
@@ -50,7 +51,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mt-8"
+            className="mt-8 flex flex-wrap items-center justify-center gap-4"
           >
             <Link
               href="/resume-builder/builder"
@@ -61,6 +62,7 @@ export default function HomePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
+            <ResumeManager />
           </motion.div>
         </div>
       </motion.section>

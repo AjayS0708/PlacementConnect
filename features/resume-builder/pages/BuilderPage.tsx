@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { CSSProperties, useEffect, useMemo, useState } from 'react';
+import { ResumeManager } from '@/features/resume-builder/components/ResumeManager';
 import {
   computeAtsV1,
   computeTopImprovements,
@@ -453,6 +454,11 @@ export default function BuilderPage() {
           <div className="section-head">
             <h1>Resume Builder</h1>
             <div className="head-actions">
+              <ResumeManager onResumeChange={(resume) => {
+                setData(resume.data);
+                setTemplate(resume.template as ResumeTemplate);
+                setAccent(resume.accent as ResumeAccentKey);
+              }} />
               <button type="button" onClick={() => setData(sampleData())}>Load Sample Data</button>
               <button type="button" className="ghost-button" onClick={() => setData(createEmptyResumeData())}>
                 Clear Form
