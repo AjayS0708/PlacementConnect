@@ -18,13 +18,13 @@ import { MobileOnly, HiddenOnMobile } from '@/components/Responsive'
  
    return (
      <div className="min-h-screen bg-[radial-gradient(circle_at_top,_#fef6e8_0%,_#f5f7ff_45%,_#f7f3ee_100%)] text-primary">
-       <div className="relative">
-         <div className="pointer-events-none absolute inset-0 opacity-50">
+       <div className="relative min-h-screen">
+         <div className="pointer-events-none absolute inset-0 opacity-30 z-0">
            <div className="absolute -top-40 -left-40 h-[320px] w-[320px] rounded-full bg-[#f3c7a8] blur-[120px]" />
            <div className="absolute top-32 right-0 h-[360px] w-[360px] rounded-full bg-[#b6c4ff] blur-[140px]" />
          </div>
  
-         <div className="relative z-10 flex">
+         <div className="relative z-10 flex min-h-screen">
            {/* Desktop Sidebar */}
            <HiddenOnMobile>
              <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
