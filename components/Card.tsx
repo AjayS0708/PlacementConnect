@@ -1,26 +1,140 @@
 import { ReactNode } from 'react'
+import { motion, HTMLMotionProps } from 'framer-motion'
 import clsx from 'clsx'
 
-interface CardProps {
+type ElevationLevel = 0 | 1 | 2 | 3 | 4
+type PaddingSize = 'none' | 'sm' | 'md' | 'lg' | 'xl'
+
+interface CardProps extends Omit<HTMLMotionProps<'div'>, 'elevation'> {
   children: ReactNode
   className?: string
-  padding?: 'sm' | 'md' | 'lg'
+  padding?: PaddingSize
+  elevation?: ElevationLevel
+  bordered?: boolean
+  interactive?: boolean
+  glass?: boolean
 }
 
-export default function Card({ children, className, padding = 'md' }: CardProps) {
+const elevationClasses = {
+  0: '',
+  1: 'shadow-elevation-1',
+  2: 'shadow-elevation-2',
+  3: 'shadow-elevation-3',
+  4: 'shadow-elevation-4',
+}
+
+const paddingClasses = {
+  none: '',
+  sm: 'p-16',
+  md: 'p-24',
+  lg: 'p-40',
+  xl: 'p-48',
+}
+
+/**
+ * Enhanced Card component with elevation system and micro-interactions
+ * Supports glass morphism, interactive states, and Material Design elevation
+ */
+export default function Card({
+  children,
+  className,
+  padding = 'md',
+  elevation = 1,
+  bordered = true,
+  interactive = false,
+  glass = false,
+  ...props
+}: CardProps) {
   return (
-    <div
+    <motion.div
       className={clsx(
-        'bg-white border border-[#E5E7EB] transition-standard rounded-lg shadow-sm',
+        'rounded-lg transition-all duration-200',
         {
-          'p-16': padding === 'sm',
-          'p-24': padding === 'md',
-          'p-40': padding === 'lg',
+          'bg-white': !glass,
+          'glass': glass,
+          'border border-border/50': bordered && !glass,
+          'border border-white/30': bordered && glass,
+          'cursor-pointer': interactive,
         },
+        elevationClasses[elevation],
+        paddingClasses[padding],
         className
       )}
+      initial={interactive ? { y: 0 } : undefined}
+      whileHover={
+        interactive
+          ? {
+              y: -4,
+              scale: 1.01,
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06)',
+              transition: { duration: 0.2, ease: 'easeOut' },
+            }
+          : undefined
+      }
+      whileTap={
+        interactive
+          ? {
+              scale: 0.98,
+              transition: { duration: 0.1 },
+            }
+          : undefined
+      }
+      {...props}
     >
       {children}
-    </div>
+    </motion.div>
   )
 }
+
+/**
+ * Preset Card variants for common patterns
+ */
+
+// Interactive card that responds to hover/click
+export function InteractiveCard({ children, className, ...props }: Omit<CardProps, 'interactive'>) {
+  return (
+    <Card interactive elevation={1} className={className} {...props}>
+      {children}
+    </Card>
+  )
+}
+
+// Elevated card for important content
+export function ElevatedCard({ children, className, ...props }: Omit<CardProps, 'elevation'>) {
+  return (
+    <Card elevation={2} className={className} {...props}>
+      {children}
+    </Card>
+  )
+}
+
+// Glass card with backdrop blur
+export function GlassCard({ children, className, ...props }: Omit<CardProps, 'glass'>) {
+  return (
+    <Card glass elevation={0} className={className} {...props}>
+      {children}
+    </Card>
+  )
+}
+
+// Feature card with accent border
+export function FeatureCard({
+  children,
+  accent = 'accent',
+  className,
+  ...props
+}: CardProps & { accent?: 'accent' | 'success' | 'warning' | 'error' }) {
+  const accentColors = {
+    accent: 'border-l-accent-500',
+    success: 'border-l-success-500',
+    warning: 'border-l-warning-500',
+    error: 'border-l-error-500',
+  }
+
+  return (
+    <Card className={clsx('border-l-4', accentColors[accent], className)} {...props}>
+      {children}
+    </Card>
+  )
+}
+

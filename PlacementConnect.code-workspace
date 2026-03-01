@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "JobNotification",
+			"path": "../JobNotification"
+		},
+		{
+			"name": "Placement Readiness Platform",
+			"path": "../Placement Readiness Platform"
+		},
+		{
+			"name": "AI Resume Builder",
+			"path": "../AI Resume Builder"
+		}
+	],
+	"settings": {}
+}
