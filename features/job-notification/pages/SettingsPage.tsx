@@ -6,6 +6,7 @@ import Input from '@/components/Input'
 import Textarea from '@/components/Textarea'
 import Button from '@/components/Button'
 import Checkbox from '@/components/Checkbox'
+import { DataBackupManager } from '@/components/DataBackupManager'
 import { JobPreferences, parseCommaSeparated, getPreferencesFromStorage, savePreferencesToStorage } from '@/features/job-notification/utils/matchScore'
 import { jobs } from '@/features/job-notification/data/jobs'
 
@@ -200,6 +201,19 @@ export default function SettingsPage() {
           </p>
         </Card>
       )}
+
+      {/* Data Backup & Restore Section */}
+      <div className="space-y-16 mt-40">
+        <div>
+          <h2 className="font-serif text-heading-md text-primary">
+            Data Management
+          </h2>
+          <p className="font-sans text-body-base text-[#666666] mt-8">
+            Export, import, and backup your application data
+          </p>
+        </div>
+        <DataBackupManager />
+      </div>
     </div>
   )
 }
