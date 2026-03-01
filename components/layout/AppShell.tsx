@@ -132,7 +132,7 @@ import { MobileOnly, HiddenOnMobile } from '@/components/Responsive'
                 </Link>
               </div>
             </div>
-            <main className="px-6 pb-10 pt-6 md:px-10">
+            <main id="main-content" className="px-6 pb-10 pt-6 md:px-10" role="main" aria-label="Main content">
               {children}
             </main>
            </div>
