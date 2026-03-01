@@ -1047,5 +1047,933 @@
   }
 }
 
+/* ============================================
+   MODERN UI REDESIGN STYLES
+   ============================================ */
 
+/* Modern Builder Header */
+.resume-builder .modern-builder-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: var(--space-8);
+  margin-bottom: var(--space-6);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+}
 
+.resume-builder .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.resume-builder .header-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.resume-builder .title-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.resume-builder .title-icon {
+  width: 28px;
+  height: 28px;
+  color: white;
+}
+
+.resume-builder .modern-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.resume-builder .modern-subtitle {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 4px 0 0;
+}
+
+.resume-builder .header-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* Modern Buttons */
+.resume-builder .modern-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.resume-builder .modern-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.resume-builder .modern-btn:active {
+  transform: translateY(0);
+}
+
+.resume-builder .modern-btn-secondary {
+  background: white;
+  color: #667eea;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.resume-builder .modern-btn-ghost {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.resume-builder .modern-btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.resume-builder .modern-btn-danger:hover {
+  background: #dc2626;
+}
+
+.resume-builder .btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Modern ATS Card */
+.resume-builder .modern-ats-card {
+  background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.resume-builder .ats-header-modern {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.resume-builder .ats-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.resume-builder .ats-icon-wrapper svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.resume-builder .ats-title-group {
+  flex: 1;
+}
+
+.resume-builder .ats-title-group h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+
+.resume-builder .ats-description {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.resume-builder .ats-score-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.resume-builder .score-number {
+  font-size: 32px;
+  font-weight: 700;
+  display: block;
+  line-height: 1;
+}
+
+.resume-builder .score-max {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.resume-builder .ats-meter-modern {
+  width: 100%;
+  height: 12px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+  position: relative;
+}
+
+.resume-builder .ats-fill-modern {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.resume-builder .ats-fill-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  to {
+    left: 100%;
+  }
+}
+
+.resume-builder .ats-section-modern {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.resume-builder .ats-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+  margin: 0 0 var(--space-3);
+}
+
+.resume-builder .section-icon {
+  width: 18px;
+  height: 18px;
+  color: #667eea;
+}
+
+.resume-builder .ats-list-modern {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resume-builder .ats-list-modern li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f3f4f6;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.resume-builder .ats-list-modern li:last-child {
+  border-bottom: none;
+}
+
+.resume-builder .ats-list-modern li svg {
+  width: 16px;
+  height: 16px;
+  color: #667eea;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.resume-builder .ats-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #10b981;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.resume-builder .ats-success svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Modern Form Sections */
+.resume-builder .modern-form-section {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.resume-builder .form-section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 2px solid #f3f4f6;
+  position: relative;
+}
+
+.resume-builder .section-header-icon {
+  width: 28px;
+  height: 28px;
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+.resume-builder .form-section-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  flex: 1;
+}
+
+.resume-builder .suggest-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resume-builder .suggest-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.resume-builder .suggest-btn .btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Modern Input Groups */
+.resume-builder .modern-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.resume-builder .modern-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resume-builder .modern-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.resume-builder .label-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+.resume-builder .modern-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ink);
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.resume-builder .modern-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.resume-builder .modern-input::placeholder {
+  color: #9ca3af;
+}
+
+.resume-builder .modern-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ink);
+  background: white;
+  transition: all 0.2s ease;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.resume-builder .modern-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.resume-builder .modern-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Modern Entry Cards */
+.resume-builder .modern-entry-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.resume-builder .entry-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.resume-builder .entry-number {
+  font-size: 13px;
+  font-weight: 700;
+  color: #667eea;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resume-builder .entry-delete-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: #fee2e2;
+  border: none;
+  border-radius: 8px;
+  color: #ef4444;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.resume-builder .entry-delete-btn:hover {
+  background: #fecaca;
+  transform: scale(1.05);
+}
+
+.resume-builder .entry-delete-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Modern Guidance Card */
+.resume-builder .modern-guidance-card {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  padding: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.resume-builder .guidance-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #92400e;
+  margin-bottom: var(--space-3);
+}
+
+.resume-builder .guidance-icon {
+  width: 18px;
+  height: 18px;
+  color: #f59e0b;
+}
+
+.resume-builder .guidance-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resume-builder .guidance-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #fde68a;
+}
+
+.resume-builder .guidance-list li:last-child {
+  border-bottom: none;
+}
+
+.resume-builder .guidance-bullet {
+  display: block;
+  font-style: italic;
+  color: #78350f;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.resume-builder .guidance-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #92400e;
+}
+
+/* Modern Skills */
+.resume-builder .modern-skill-category {
+  margin-bottom: var(--space-4);
+  padding: var(--space-4);
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.resume-builder .skill-category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.resume-builder .skill-category-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+
+.resume-builder .skill-count-badge {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.resume-builder .modern-chip-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: var(--space-3);
+  min-height: 40px;
+}
+
+.resume-builder .modern-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: all 0.2s ease;
+}
+
+.resume-builder .modern-chip:hover {
+  border-color: #667eea;
+  transform: translateY(-1px);
+}
+
+.resume-builder .chip-remove-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 4px;
+  color: #ef4444;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.resume-builder .chip-remove-btn:hover {
+  background: #fee2e2;
+}
+
+.resume-builder .chip-remove-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Modern Projects */
+.resume-builder .modern-project-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+}
+
+.resume-builder .project-card-toggle {
+  width: 100%;
+  padding: var(--space-4);
+  background: white;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resume-builder .project-card-toggle:hover {
+  background: #f9fafb;
+}
+
+.resume-builder .project-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.resume-builder .project-icon {
+  width: 22px;
+  height: 22px;
+  color: #667eea;
+}
+
+.resume-builder .project-title-display {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: left;
+}
+
+.resume-builder .project-chevron {
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+
+.resume-builder .project-chevron.open {
+  transform: rotate(180deg);
+}
+
+.resume-builder .project-card-content {
+  padding: var(--space-4);
+  border-top: 1px solid #e5e7eb;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.resume-builder .char-counter {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Modern Preview */
+.resume-builder .modern-preview-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px 16px 0 0;
+  padding: var(--space-6);
+  margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) var(--space-6);
+}
+
+.resume-builder .preview-header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.resume-builder .preview-icon {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.resume-builder .preview-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.resume-builder .preview-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 4px 0 0;
+}
+
+/* Modern Template Section */
+.resume-builder .modern-template-section {
+  margin-bottom: var(--space-6);
+}
+
+.resume-builder .template-section-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--space-3);
+}
+
+.resume-builder .modern-template-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.resume-builder .modern-template-btn {
+  position: relative;
+  padding: var(--space-4);
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.resume-builder .modern-template-btn:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.resume-builder .modern-template-btn.active {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.resume-builder .template-label-modern {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+}
+
+.resume-builder .template-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: #f9fafb;
+  border-radius: 6px;
+}
+
+.resume-builder .template-preview span {
+  height: 3px;
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.resume-builder .template-preview-classic span:first-child {
+  background: #667eea;
+  height: 4px;
+}
+
+.resume-builder .template-preview-modern span {
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.resume-builder .template-preview-minimal span {
+  background: #9ca3af;
+  height: 2px;
+}
+
+.resume-builder .template-check-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background: #667eea;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.resume-builder .template-check-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Modern Color Section */
+.resume-builder .modern-color-section {
+  margin-bottom: var(--space-6);
+}
+
+.resume-builder .modern-color-picker {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.resume-builder .modern-color-btn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resume-builder .modern-color-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.resume-builder .modern-color-btn.active {
+  border-color: var(--ink);
+  transform: scale(1.05);
+}
+
+.resume-builder .color-check {
+  width: 20px;
+  height: 20px;
+  color: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Modern Preview Wrapper */
+.resume-builder .modern-preview-wrapper {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: var(--space-6);
+}
+
+.resume-builder .preview-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10);
+  text-align: center;
+  color: var(--muted);
+}
+
+.resume-builder .empty-icon {
+  width: 64px;
+  height: 64px;
+  color: #d1d5db;
+  margin-bottom: var(--space-4);
+}
+
+.resume-builder .empty-text {
+  font-size: 16px;
+  max-width: 300px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .resume-builder .modern-builder-header {
+    padding: var(--space-6);
+  }
+
+  .resume-builder .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .resume-builder .header-title-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .resume-builder .modern-title {
+    font-size: 24px;
+  }
+
+  .resume-builder .header-actions {
+    width: 100%;
+  }
+
+  .resume-builder .modern-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .resume-builder .modern-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-builder .ats-header-modern {
+    flex-direction: column;
+  }
+
+  .resume-builder .modern-template-picker {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
