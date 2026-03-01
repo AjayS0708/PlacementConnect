@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/features/placement-readiness/components/ui/card';
 import { getHistoryWithStatus, setSelectedAnalysisId } from '@/features/placement-readiness/lib/storage';
+import { InterviewQuestionsBank } from '@/features/placement-readiness/components/InterviewQuestionsBank';
 
 export function ResourcesPage() {
   const router = useRouter();
@@ -15,11 +16,24 @@ export function ResourcesPage() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>History</CardTitle>
-        <CardDescription>Saved analyses persist in localStorage and are available after refresh.</CardDescription>
-      </CardHeader>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Interview Questions Bank</CardTitle>
+          <CardDescription>
+            Practice common interview questions with sample answers, tips, and track your progress
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <InterviewQuestionsBank />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Analysis History</CardTitle>
+          <CardDescription>Saved analyses persist in localStorage and are available after refresh.</CardDescription>
+        </CardHeader>
       <CardContent>
         {hadCorrupted && (
           <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
@@ -58,6 +72,7 @@ export function ResourcesPage() {
         )}
       </CardContent>
     </Card>
+    </div>
   );
 }
 
