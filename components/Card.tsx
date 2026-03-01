@@ -4,6 +4,7 @@ import clsx from 'clsx'
 
 type ElevationLevel = 0 | 1 | 2 | 3 | 4
 type PaddingSize = 'none' | 'sm' | 'md' | 'lg' | 'xl'
+type HoverEffect = 'lift' | 'glow' | 'brighten' | 'none'
 
 interface CardProps extends Omit<HTMLMotionProps<'div'>, 'elevation'> {
   children: ReactNode
@@ -13,6 +14,7 @@ interface CardProps extends Omit<HTMLMotionProps<'div'>, 'elevation'> {
   bordered?: boolean
   interactive?: boolean
   glass?: boolean
+  hoverEffect?: HoverEffect
 }
 
 const elevationClasses = {
@@ -43,8 +45,35 @@ export default function Card({
   bordered = true,
   interactive = false,
   glass = false,
+  hoverEffect = 'lift',
   ...props
 }: CardProps) {
+  // Determine hover animation based on hoverEffect prop
+  const getHoverAnimation = () => {
+    if (!interactive || hoverEffect === 'none') return undefined;
+    
+    switch (hoverEffect) {
+      case 'lift':
+        return {
+          y: -8,
+          scale: 1.02,
+          boxShadow: '0 12px 32px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.08)',
+        };
+      case 'glow':
+        return {
+          boxShadow: '0 0 30px 0 rgba(59, 130, 246, 0.3)',
+          scale: 1.01,
+        };
+      case 'brighten':
+        return {
+          scale: 1.03,
+          filter: 'brightness(1.05)',
+        };
+      default:
+        return undefined;
+    }
+  };
+
   return (
     <motion.div
       className={clsx(
@@ -55,30 +84,22 @@ export default function Card({
           'border border-border/50': bordered && !glass,
           'border border-white/30': bordered && glass,
           'cursor-pointer': interactive,
+          'overflow-hidden': interactive, // For ripple effect
         },
         elevationClasses[elevation],
         paddingClasses[padding],
         className
       )}
-      initial={interactive ? { y: 0 } : undefined}
-      whileHover={
-        interactive
-          ? {
-              y: -4,
-              scale: 1.01,
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06)',
-              transition: { duration: 0.2, ease: 'easeOut' },
-            }
-          : undefined
-      }
+      initial={interactive ? { y: 0, scale: 1 } : undefined}
+      whileHover={getHoverAnimation()}
       whileTap={
         interactive
           ? {
-              scale: 0.98,
-              transition: { duration: 0.1 },
+              scale: 0.97,
             }
           : undefined
       }
+      transition={{ duration: 0.3, ease: 'easeOut' }}
       {...props}
     >
       {children}

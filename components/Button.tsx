@@ -1,6 +1,7 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState, useRef, MouseEvent } from 'react'
 import { motion, HTMLMotionProps } from 'framer-motion'
 import clsx from 'clsx'
+import { buttonVariants, rippleVariants } from '@/utils/microInteractions'
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
 type ButtonSize = 'sm' | 'md' | 'lg'
@@ -13,6 +14,8 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'size'> {
   loading?: boolean
   leftIcon?: ReactNode
   rightIcon?: ReactNode
+  magnetic?: boolean
+  ripple?: boolean
 }
 
 const variantClasses = {
@@ -35,7 +38,7 @@ const sizeClasses = {
 
 /**
  * Enhanced Button component with micro-interactions and variants
- * Supports loading states, icons, and smooth animations
+ * Supports loading states, icons, magnetic hover, and ripple effects
  */
 export default function Button({
   variant = 'primary',
@@ -46,11 +49,37 @@ export default function Button({
   leftIcon,
   rightIcon,
   disabled,
+  magnetic = false, // Reserved for future implementation
+  ripple = true,
   className,
   ...props
 }: ButtonProps) {
+  const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([]);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Magnetic effect can be implemented here in future
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _magnetic = magnetic;
+
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    if (ripple && !disabled && !loading) {
+      const rect = buttonRef.current?.getBoundingClientRect();
+      if (rect) {
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const id = Date.now();
+        setRipples((prev) => [...prev, { x, y, id }]);
+        setTimeout(() => {
+          setRipples((prev) => prev.filter((r) => r.id !== id));
+        }, 600);
+      }
+    }
+    props.onClick?.(e);
+  };
+
   return (
     <motion.button
+      ref={buttonRef}
       className={clsx(
         'font-sans font-medium rounded-lg inline-flex items-center justify-center gap-8',
         'transition-all duration-200 relative overflow-hidden',
@@ -63,24 +92,13 @@ export default function Button({
         },
         className
       )}
-      whileHover={
-        !disabled && !loading
-          ? {
-              scale: 1.02,
-              y: -2,
-              transition: { duration: 0.2, ease: 'easeOut' },
-            }
-          : undefined
-      }
-      whileTap={
-        !disabled && !loading
-          ? {
-              scale: 0.98,
-              transition: { duration: 0.1 },
-            }
-          : undefined
-      }
+      variants={buttonVariants}
+      initial="initial"
+      whileHover={!disabled && !loading ? "hover" : undefined}
+      whileTap={!disabled && !loading ? "tap" : undefined}
+      animate={loading ? "loading" : "initial"}
       disabled={disabled || loading}
+      onClick={handleClick}
       {...props}
     >
       {/* Loading Spinner */}
@@ -134,15 +152,29 @@ export default function Button({
         </motion.span>
       )}
 
-      {/* Ripple Effect (Optional - can be enhanced with canvas) */}
-      <span className="absolute inset-0 overflow-hidden rounded-lg">
-        <motion.span
-          className="absolute inset-0 bg-white/20"
-          initial={{ scale: 0, opacity: 0 }}
-          whileTap={{ scale: 2, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-        />
-      </span>
+      {/* Enhanced Ripple Effects */}
+      {ripple && (
+        <span className="absolute inset-0 overflow-hidden rounded-lg pointer-events-none">
+          {ripples.map((ripple) => (
+            <motion.span
+              key={ripple.id}
+              className="absolute bg-white/30 rounded-full"
+              style={{
+                left: ripple.x,
+                top: ripple.y,
+                width: 10,
+                height: 10,
+                marginLeft: -5,
+                marginTop: -5,
+              }}
+              variants={rippleVariants}
+              initial="initial"
+              animate="animate"
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            />
+          ))}
+        </span>
+      )}
     </motion.button>
   )
 }
