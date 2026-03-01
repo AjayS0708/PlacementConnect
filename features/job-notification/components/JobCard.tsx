@@ -72,22 +72,12 @@ export default function JobCard({ job, matchScore = 0, showMatchScore = false, o
             </p>
           </div>
           <div className="flex flex-col gap-8 items-end">
-            <div className="flex gap-8 items-center">
-              <span 
-                className={`px-16 py-8 font-sans text-sm font-medium rounded-md ${getSourceColor(job.source)}`}
-                style={{ borderRadius: '6px' }}
-              >
-                {job.source}
-              </span>
-              {isMounted && (
-                <span 
-                  className={`px-16 py-8 font-sans text-sm font-medium rounded-md text-white ${statusBadgeColors[currentStatus]}`}
-                  style={{ borderRadius: '6px' }}
-                >
-                  {currentStatus}
-                </span>
-              )}
-            </div>
+            <span 
+              className={`px-16 py-8 font-sans text-sm font-medium rounded-md ${getSourceColor(job.source)}`}
+              style={{ borderRadius: '6px' }}
+            >
+              {job.source}
+            </span>
             {showMatchScore && (
               <span 
                 className="px-16 py-8 font-sans text-sm font-bold rounded-md shadow-sm"
@@ -133,28 +123,35 @@ export default function JobCard({ job, matchScore = 0, showMatchScore = false, o
 
         {/* Status Buttons */}
         <div className="space-y-8">
-          <p className="font-sans text-xs font-semibold text-[#666666] uppercase tracking-wide">Application Status</p>
-          <div className="grid grid-cols-2 gap-8">
+          <div className="flex items-center justify-between">
+            <p className="font-sans text-xs font-semibold text-[#666666] uppercase tracking-wide">Application Status</p>
+            {isMounted && (
+              <span className={`px-10 py-4 text-xs font-semibold rounded-md ${statusBadgeColors[currentStatus]} text-white`}>
+                {currentStatus}
+              </span>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-8">
             {(['Not Applied', 'Applied', 'Rejected', 'Selected'] as JobStatus[]).map((status) => {
               const isActive = currentStatus === status
               const getColorClasses = (status: JobStatus) => {
                 switch (status) {
                   case 'Not Applied':
                     return isActive 
-                      ? 'bg-[#9CA3AF] text-white border-[#6B7280]'
-                      : 'bg-white text-[#6B7280] border-[#D1D5DB] hover:border-[#9CA3AF]'
+                      ? 'bg-slate-100 text-slate-700 border-slate-300 ring-2 ring-slate-400'
+                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                   case 'Applied':
                     return isActive
-                      ? 'bg-[#3B82F6] text-white border-[#2563EB]'
-                      : 'bg-white text-[#3B82F6] border-[#93C5FD] hover:border-[#3B82F6]'
+                      ? 'bg-blue-500 text-white border-blue-600 shadow-md'
+                      : 'bg-white text-blue-600 border-blue-200 hover:border-blue-400 hover:bg-blue-50'
                   case 'Rejected':
                     return isActive
-                      ? 'bg-[#EF4444] text-white border-[#DC2626]'
-                      : 'bg-white text-[#EF4444] border-[#FCA5A5] hover:border-[#EF4444]'
+                      ? 'bg-red-500 text-white border-red-600 shadow-md'
+                      : 'bg-white text-red-600 border-red-200 hover:border-red-400 hover:bg-red-50'
                   case 'Selected':
                     return isActive
-                      ? 'bg-[#10B981] text-white border-[#059669]'
-                      : 'bg-white text-[#10B981] border-[#6EE7B7] hover:border-[#10B981]'
+                      ? 'bg-green-500 text-white border-green-600 shadow-md'
+                      : 'bg-white text-green-600 border-green-200 hover:border-green-400 hover:bg-green-50'
                 }
               }
               
@@ -165,7 +162,7 @@ export default function JobCard({ job, matchScore = 0, showMatchScore = false, o
                     e.stopPropagation()
                     handleStatusChange(status)
                   }}
-                  className={`px-12 py-8 text-xs font-medium border transition-all duration-200 rounded-md ${getColorClasses(status)} ${isActive ? 'font-semibold' : ''}`}
+                  className={`flex-1 min-w-[100px] px-12 py-10 text-xs font-medium border-2 transition-all duration-200 rounded-lg ${getColorClasses(status)} ${isActive ? 'font-semibold scale-[1.02]' : 'hover:scale-[1.01]'}`}
                 >
                   {status}
                 </button>

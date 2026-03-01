@@ -87,14 +87,15 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         </Link>
         
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.1, backgroundColor: '#3B82F6' }}
+          whileTap={{ scale: 0.9 }}
           onClick={onToggle}
-          className="rounded-lg border-2 border-slate-300 bg-white p-2 text-slate-600 shadow-sm transition-all hover:border-slate-400 hover:shadow-md"
+          className="rounded-lg border-2 border-blue-300 bg-blue-50 p-2 text-blue-600 shadow-md transition-all hover:border-blue-400 hover:text-white hover:shadow-lg"
           aria-label="Toggle sidebar"
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          <svg className={clsx('h-4 w-4 transition-transform', collapsed && 'rotate-180')} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg className={clsx('h-5 w-5 transition-transform duration-300', collapsed && 'rotate-180')} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </motion.button>
       </div>

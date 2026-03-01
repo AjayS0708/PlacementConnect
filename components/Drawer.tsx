@@ -111,10 +111,11 @@ export function Drawer({
           {/* Overlay */}
           {overlay && (
             <motion.div
-              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+              className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               onClick={onClose}
             />
           )}
@@ -122,7 +123,7 @@ export function Drawer({
           {/* Drawer */}
           <motion.div
             className={cn(
-              'fixed z-50 bg-white shadow-2xl',
+              'fixed z-[110] bg-white shadow-2xl',
               {
                 'left-0 top-0 h-full': position === 'left',
                 'right-0 top-0 h-full': position === 'right',
