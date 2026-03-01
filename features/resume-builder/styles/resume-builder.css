@@ -1101,12 +1101,24 @@
 }
 
 .resume-builder .modern-sidebar-enhanced {
-  background: linear-gradient(180deg, var(--resume-accent) 0%, color-mix(in srgb, var(--resume-accent) 85%, black) 100%);
+  background: var(--resume-accent);
   color: white;
   padding: var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+  position: relative;
+}
+
+.resume-builder .modern-sidebar-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.15) 100%);
+  pointer-events: none;
 }
 
 .resume-builder .sidebar-name {

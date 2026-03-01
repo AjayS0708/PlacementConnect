@@ -155,8 +155,12 @@ export default function BuilderPage() {
   const [skillSuggestLoading, setSkillSuggestLoading] = useState<boolean>(false);
   const [openProjects, setOpenProjects] = useState<number[]>([0]);
 
+  // Debounced save to localStorage
   useEffect(() => {
-    saveResumeData(data);
+    const timer = setTimeout(() => {
+      saveResumeData(data);
+    }, 500); // Save after 500ms of inactivity
+    return () => clearTimeout(timer);
   }, [data]);
 
   useEffect(() => {
