@@ -4,6 +4,9 @@ import { useState } from 'react'
 import Sidebar from './Sidebar'
 import TopNav from './TopNav'
 import Link from 'next/link'
+import { MobileNavDrawer } from '@/components/Drawer'
+import { HamburgerMenu } from '@/components/HamburgerMenu'
+import { MobileOnly, HiddenOnMobile } from '@/components/Responsive'
  
  type AppShellProps = {
    children: React.ReactNode
@@ -11,6 +14,7 @@ import Link from 'next/link'
  
  export default function AppShell({ children }: AppShellProps) {
    const [collapsed, setCollapsed] = useState(false)
+   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
  
    return (
      <div className="min-h-screen bg-[radial-gradient(circle_at_top,_#fef6e8_0%,_#f5f7ff_45%,_#f7f3ee_100%)] text-primary">
@@ -21,9 +25,65 @@ import Link from 'next/link'
          </div>
  
          <div className="relative z-10 flex">
-           <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
+           {/* Desktop Sidebar */}
+           <HiddenOnMobile>
+             <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
+           </HiddenOnMobile>
+
+           {/* Mobile Drawer */}
+           <MobileOnly>
+             <MobileNavDrawer isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)}>
+               <nav className="space-y-2">
+                 <Link
+                   href="/"
+                   className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                   onClick={() => setMobileMenuOpen(false)}
+                 >
+                   🏠 Home
+                 </Link>
+                 <Link
+                   href="/job-notifications"
+                   className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                   onClick={() => setMobileMenuOpen(false)}
+                 >
+                   💼 Job Notifications
+                 </Link>
+                 <Link
+                   href="/placement-readiness"
+                   className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                   onClick={() => setMobileMenuOpen(false)}
+                 >
+                   📊 Placement Readiness
+                 </Link>
+                 <Link
+                   href="/resume-builder"
+                   className="block rounded-lg px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                   onClick={() => setMobileMenuOpen(false)}
+                 >
+                   📄 Resume Builder
+                 </Link>
+               </nav>
+             </MobileNavDrawer>
+           </MobileOnly>
+
            <div className="flex-1">
-            <TopNav />
+            {/* Mobile Header with Hamburger */}
+            <MobileOnly>
+              <div className="sticky top-0 z-20 flex items-center justify-between border-b border-neutral-200 bg-white/80 p-4 backdrop-blur-lg">
+                <HamburgerMenu 
+                  isOpen={mobileMenuOpen} 
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                />
+                <h1 className="text-lg font-bold text-slate-900">PlacementConnect</h1>
+                <div className="w-12" /> {/* Spacer for balance */}
+              </div>
+            </MobileOnly>
+
+            {/* Desktop TopNav */}
+            <HiddenOnMobile>
+              <TopNav />
+            </HiddenOnMobile>
+
             <div className="md:hidden px-6">
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <Link
