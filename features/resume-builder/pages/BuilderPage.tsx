@@ -74,7 +74,9 @@ const CATEGORY_META: Array<{ key: SkillCategoryKey; label: string }> = [
 const TEMPLATE_LABELS: Record<ResumeTemplate, string> = {
   classic: 'Classic',
   modern: 'Modern',
-  minimal: 'Minimal'
+  minimal: 'Minimal',
+  professional: 'Professional',
+  creative: 'Creative'
 };
 
 const updateListItem = <T,>(items: T[], index: number, next: T): T[] =>

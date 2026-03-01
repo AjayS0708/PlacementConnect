@@ -51,7 +51,7 @@ export type AtsResult = {
   allCriteriaMet: boolean;
 };
 
-export type ResumeTemplate = 'classic' | 'modern' | 'minimal';
+export type ResumeTemplate = 'classic' | 'modern' | 'minimal' | 'professional' | 'creative';
 export type ResumeAccentKey = 'teal' | 'navy' | 'burgundy' | 'forest' | 'charcoal';
 export type ResumeAccentTheme = {
   key: ResumeAccentKey;
@@ -62,7 +62,7 @@ export type ResumeAccentTheme = {
 export const RESUME_STORAGE_KEY = 'resumeBuilderData';
 export const RESUME_TEMPLATE_KEY = 'resumeTemplateChoice';
 export const RESUME_ACCENT_KEY = 'resumeAccentChoice';
-export const RESUME_TEMPLATES: ResumeTemplate[] = ['classic', 'modern', 'minimal'];
+export const RESUME_TEMPLATES: ResumeTemplate[] = ['classic', 'modern', 'minimal', 'professional', 'creative'];
 export const RESUME_ACCENTS: ResumeAccentTheme[] = [
   { key: 'teal', label: 'Teal', hsl: 'hsl(168, 60%, 40%)' },
   { key: 'navy', label: 'Navy', hsl: 'hsl(220, 60%, 35%)' },
