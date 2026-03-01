@@ -5,27 +5,10 @@ import { jobs, Job } from '@/features/job-notification/data/jobs'
 import JobCard from '@/features/job-notification/components/JobCard'
 import JobModal from '@/features/job-notification/components/JobModal'
 import Card from '@/components/Card'
-import Toast from '@/components/Toast'
-
-interface ToastData {
-  id: string
-  message: string
-  type: 'success' | 'info' | 'warning' | 'error'
-}
 
 export default function SavedPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
   const [savedJobs, setSavedJobs] = useState<string[]>([])
-  const [toasts, setToasts] = useState<ToastData[]>([])
-
-  const showToast = (message: string, type: 'success' | 'info' | 'warning' | 'error' = 'success') => {
-    const id = Date.now().toString()
-    setToasts(prev => [...prev, { id, message, type }])
-  }
-
-  const removeToast = (id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id))
-  }
 
   // Load saved jobs from localStorage
   useEffect(() => {
@@ -66,7 +49,7 @@ export default function SavedPage() {
               onView={() => setSelectedJob(job)}
               onSave={() => handleSaveJob(job.id)}
               isSaved={true}
-              onStatusChange={(status) => showToast(`Status updated: ${status}`, 'success')}
+              onStatusChange={() => {}}
             />
           ))}
         </div>
@@ -105,16 +88,6 @@ export default function SavedPage() {
         onSave={() => selectedJob && handleSaveJob(selectedJob.id)}
         isSaved={selectedJob ? savedJobs.includes(selectedJob.id) : false}
       />
-
-      {/* Toasts */}
-      {toasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          message={toast.message}
-          type={toast.type}
-          onClose={() => removeToast(toast.id)}
-        />
-      ))}
     </div>
   )
 }

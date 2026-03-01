@@ -8,7 +8,6 @@ import JobModal from '@/features/job-notification/components/JobModal'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
 import Checkbox from '@/components/Checkbox'
-import Toast from '@/components/Toast'
 import { SkeletonJobCard, SkeletonStatCard } from '@/components/Skeleton'
 import { FilterEmptyState } from '@/components/EmptyState'
 import { calculateMatchScore, getPreferencesFromStorage, JobPreferences } from '@/features/job-notification/utils/matchScore'
@@ -22,12 +21,6 @@ import { calculateMatchScoreWithBreakdown, getCustomWeights } from '@/features/j
 import { paginateItems, sortJobs, JobSortOption, getSortPreference, saveSortPreference, getPaginationSettings, savePaginationSettings, JobWithScore as JobWithScoreType } from '@/features/job-notification/utils/jobFiltering'
 
 type JobWithScore = Job & { matchScore: number }
-
-interface ToastData {
-  id: string
-  message: string
-  type: 'success' | 'info' | 'warning' | 'error'
-}
 
 export default function DashboardPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
@@ -43,19 +36,9 @@ export default function DashboardPage() {
   const [status, setStatus] = useState('all')
   const [sortOption, setSortOption] = useState<JobSortOption>('match-desc')
   const [showOnlyMatches, setShowOnlyMatches] = useState(false)
-  const [toasts, setToasts] = useState<ToastData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
-
-  const showToast = (message: string, type: 'success' | 'info' | 'warning' | 'error' = 'success') => {
-    const id = Date.now().toString()
-    setToasts(prev => [...prev, { id, message, type }])
-  }
-
-  const removeToast = (id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id))
-  }
 
   // Simulate initial loading and load data from localStorage
   useEffect(() => {
@@ -301,8 +284,6 @@ export default function DashboardPage() {
     setStatus(filters.status || 'all')
     setSortOption(filters.sortOption || 'match-desc')
     setShowOnlyMatches(filters.showOnlyMatches || false)
-    
-    showToast('Preset loaded successfully!', 'success')
   }
 
   return (
@@ -558,7 +539,7 @@ export default function DashboardPage() {
                   onView={() => setSelectedJob(job)}
                   onSave={() => handleSaveJob(job.id)}
                   isSaved={savedJobs.includes(job.id)}
-                  onStatusChange={(status) => showToast(`Status updated: ${status}`, 'success')}
+                  onStatusChange={() => {}}
                 />
               </motion.div>
             ))}
@@ -596,16 +577,6 @@ export default function DashboardPage() {
         onSave={() => selectedJob && handleSaveJob(selectedJob.id)}
         isSaved={selectedJob ? savedJobs.includes(selectedJob.id) : false}
       />
-
-      {/* Toasts */}
-      {toasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          message={toast.message}
-          type={toast.type}
-          onClose={() => removeToast(toast.id)}
-        />
-      ))}
     </div>
   )
 }

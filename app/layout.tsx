@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import AppShell from '@/components/layout/AppShell'
-import { ClientProviders } from '@/components/ClientProviders'
 
 export const metadata: Metadata = {
   title: 'Placement Connect',
@@ -16,9 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <ClientProviders>
-          <AppShell>{children}</AppShell>
-        </ClientProviders>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   )
