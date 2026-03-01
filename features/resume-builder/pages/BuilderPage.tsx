@@ -74,9 +74,7 @@ const CATEGORY_META: Array<{ key: SkillCategoryKey; label: string }> = [
 const TEMPLATE_LABELS: Record<ResumeTemplate, string> = {
   classic: 'Classic',
   modern: 'Modern',
-  minimal: 'Minimal',
-  professional: 'Professional',
-  creative: 'Creative'
+  minimal: 'Minimal'
 };
 
 const updateListItem = <T,>(items: T[], index: number, next: T): T[] =>
@@ -877,7 +875,7 @@ export default function BuilderPage() {
 
           <div className={`resume-shell template-${template}`} style={getTemplateStyle(accentTheme.hsl)}>
             {previewHasContent ? (
-              template === 'modern' || template === 'creative' ? renderModern() : renderClassicOrMinimal()
+              template === 'modern' ? renderModern() : renderClassicOrMinimal()
             ) : (
               <p>Start filling the form to generate a live preview.</p>
             )}

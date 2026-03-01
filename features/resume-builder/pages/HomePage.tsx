@@ -133,7 +133,7 @@ export default function HomePage() {
         className="grid gap-6 md:grid-cols-3"
       >
         {[
-          { label: 'Templates', value: '5+', icon: '📄' },
+          { label: 'Templates', value: '3', icon: '📄' },
           { label: 'Sections', value: '10+', icon: '📋' },
           { label: 'Export Formats', value: 'PDF', icon: '📥' },
         ].map((stat, index) => (

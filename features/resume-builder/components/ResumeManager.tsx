@@ -171,8 +171,6 @@ export function ResumeManager({ onResumeChange, className }: ResumeManagerProps)
       classic: '📄',
       modern: '✨',
       minimal: '⚡',
-      professional: '💼',
-      creative: '🎨',
     };
     return icons[template as keyof typeof icons] || '📄';
   };
@@ -182,8 +180,6 @@ export function ResumeManager({ onResumeChange, className }: ResumeManagerProps)
       classic: 'from-blue-500 to-blue-600',
       modern: 'from-purple-500 to-purple-600',
       minimal: 'from-slate-500 to-slate-600',
-      professional: 'from-indigo-500 to-indigo-600',
-      creative: 'from-pink-500 to-pink-600',
     };
     return colors[template as keyof typeof colors] || 'from-gray-500 to-gray-600';
   };

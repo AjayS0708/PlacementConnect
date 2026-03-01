@@ -25,9 +25,7 @@ import {
 const TEMPLATE_LABELS: Record<ResumeTemplate, string> = {
   classic: 'Classic',
   modern: 'Modern',
-  minimal: 'Minimal',
- professional: 'Professional',
-  creative: 'Creative'
+  minimal: 'Minimal'
 };
 
 const CATEGORY_META = [
