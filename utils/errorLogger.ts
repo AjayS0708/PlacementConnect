@@ -192,6 +192,8 @@ class ErrorLogger {
    * Store error in localStorage
    */
   private storeError(errorLog: ErrorLog) {
+    if (typeof window === 'undefined') return;
+    
     try {
       const existingLogs = this.getStoredErrors();
       existingLogs.unshift(errorLog);
@@ -209,6 +211,8 @@ class ErrorLogger {
    * Get stored errors
    */
   getStoredErrors(): ErrorLog[] {
+    if (typeof window === 'undefined') return [];
+    
     try {
       const stored = localStorage.getItem(this.storageKey);
       return stored ? JSON.parse(stored) : [];
@@ -222,6 +226,8 @@ class ErrorLogger {
    * Clear stored errors
    */
   clearStoredErrors() {
+    if (typeof window === 'undefined') return;
+    
     try {
       localStorage.removeItem(this.storageKey);
     } catch (e) {

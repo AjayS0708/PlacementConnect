@@ -28,6 +28,11 @@ export function exportAllData(): ExportData {
     data: {},
   };
 
+  // Only access localStorage on client side
+  if (typeof window === 'undefined') {
+    return exportData;
+  }
+
   // Export saved jobs
   const savedJobs = localStorage.getItem('savedJobs');
   if (savedJobs) {
@@ -115,6 +120,8 @@ export function exportAllData(): ExportData {
  * Download exported data as JSON file
  */
 export function downloadDataAsJSON(filename: string = 'placementconnect-backup'): void {
+  if (typeof window === 'undefined') return;
+  
   const data = exportAllData();
   const jsonString = JSON.stringify(data, null, 2);
   const blob = new Blob([jsonString], { type: 'application/json' });
@@ -137,6 +144,11 @@ export function importDataFromJSON(
   onSuccess: (data: ExportData) => void,
   onError: (error: string) => void
 ): void {
+  if (typeof window === 'undefined') {
+    onError('Cannot import data on server side');
+    return;
+  }
+  
   const reader = new FileReader();
 
   reader.onload = (e) => {
@@ -199,6 +211,8 @@ export function importDataFromJSON(
  * Clear all application data
  */
 export function clearAllData(): void {
+  if (typeof window === 'undefined') return;
+  
   const keysToRemove = [
     'savedJobs',
     'jobStatuses',
@@ -217,6 +231,8 @@ export function clearAllData(): void {
  * Get storage size in bytes
  */
 export function getStorageSize(): number {
+  if (typeof window === 'undefined') return 0;
+  
   let total = 0;
   for (const key in localStorage) {
     if (localStorage.hasOwnProperty(key)) {
@@ -241,6 +257,8 @@ export function formatBytes(bytes: number): string {
  * Auto-backup to localStorage with timestamp
  */
 export function autoBackup(): void {
+  if (typeof window === 'undefined') return;
+  
   const data = exportAllData();
   const backupKey = `autoBackup_${Date.now()}`;
   
@@ -265,6 +283,8 @@ export function autoBackup(): void {
  * Get list of auto-backups
  */
 export function getAutoBackups(): Array<{ key: string; date: Date; size: number }> {
+  if (typeof window === 'undefined') return [];
+  
   const allKeys = Object.keys(localStorage);
   const backupKeys = allKeys.filter((key) => key.startsWith('autoBackup_'));
   
@@ -284,6 +304,8 @@ export function getAutoBackups(): Array<{ key: string; date: Date; size: number 
  * Restore from auto-backup
  */
 export function restoreFromAutoBackup(backupKey: string): boolean {
+  if (typeof window === 'undefined') return false;
+  
   try {
     const backupData = localStorage.getItem(backupKey);
     if (!backupData) return false;
