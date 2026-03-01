@@ -877,7 +877,7 @@ export default function BuilderPage() {
 
           <div className={`resume-shell template-${template}`} style={getTemplateStyle(accentTheme.hsl)}>
             {previewHasContent ? (
-              template === 'modern' ? renderModern() : renderClassicOrMinimal()
+              template === 'modern' || template === 'creative' ? renderModern() : renderClassicOrMinimal()
             ) : (
               <p>Start filling the form to generate a live preview.</p>
             )}

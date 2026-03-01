@@ -239,10 +239,10 @@ export function ResumeManager({ onResumeChange, className }: ResumeManagerProps)
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 40 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed left-1/2 top-1/2 z-[110] flex max-h-[92vh] w-[95vw] max-w-5xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border-2 border-slate-300 bg-gradient-to-br from-white via-slate-50 to-purple-50 shadow-2xl"
+              className="fixed left-1/2 top-1/2 z-[110] flex max-h-[85vh] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border-2 border-slate-300 bg-gradient-to-br from-white via-slate-50 to-purple-50 shadow-2xl"
             >
               {/* Header - Redesigned */}
-              <div className="relative flex-shrink-0 overflow-hidden border-b-2 border-slate-200 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 px-8 py-6">
+              <div className="relative flex-shrink-0 overflow-hidden border-b-2 border-slate-200 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 px-6 py-4">
                 {/* Decorative background patterns */}
                 <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-white/10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 h-24 w-24 -translate-x-6 translate-y-6 rounded-full bg-white/10 blur-xl" />
@@ -260,8 +260,8 @@ export function ResumeManager({ onResumeChange, className }: ResumeManagerProps)
                         </svg>
                       </div>
                       <div>
-                        <h2 className="text-3xl font-black text-white drop-shadow-lg">Resume Library</h2>
-                        <p className="mt-0.5 text-sm font-medium text-purple-100">Manage and organize your resume collection</p>
+                        <h2 className="text-2xl font-black text-white drop-shadow-lg">Resume Library</h2>
+                        <p className="mt-0.5 text-xs font-medium text-purple-100">Manage and organize your resume collection</p>
                       </div>
                     </div>
                   </div>
@@ -306,33 +306,33 @@ export function ResumeManager({ onResumeChange, className }: ResumeManagerProps)
                     className="flex-shrink-0"
                   >
                     <div className={cn(
-                      'flex items-center gap-3 px-8 py-4',
+                      'flex items-center gap-3 px-6 py-3',
                       importStatus.type === 'success'
                         ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-800 border-b-2 border-green-200'
                         : 'bg-gradient-to-r from-red-50 to-rose-50 text-red-800 border-b-2 border-red-200'
                     )}>
                       <div className={cn(
-                        'flex h-8 w-8 items-center justify-center rounded-full',
+                        'flex h-7 w-7 items-center justify-center rounded-full',
                         importStatus.type === 'success' ? 'bg-green-200' : 'bg-red-200'
                       )}>
                         {importStatus.type === 'success' ? (
-                          <svg className="h-5 w-5 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <svg className="h-4 w-4 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         ) : (
-                          <svg className="h-5 w-5 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <svg className="h-4 w-4 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         )}
                       </div>
-                      <span className="font-semibold">{importStatus.message}</span>
+                      <span className="text-sm font-semibold">{importStatus.message}</span>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
 
               {/* Actions Bar - Redesigned */}
-              <div className="flex-shrink-0 border-b-2 border-slate-200 bg-white px-8 py-5">
+              <div className="flex-shrink-0 border-b-2 border-slate-200 bg-white px-6 py-4">
                 <div className="flex items-center justify-between gap-4">
                   <motion.button
                     whileHover={{ scale: 1.03, y: -1 }}
@@ -371,7 +371,7 @@ export function ResumeManager({ onResumeChange, className }: ResumeManagerProps)
               </div>
 
               {/* Resume List - Completely Redesigned */}
-              <div className="flex-1 overflow-y-auto p-8" style={{ minHeight: 0 }}>
+              <div className="flex-1 overflow-y-auto p-6" style={{ minHeight: 0 }}>
                 {resumes.length === 0 ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
