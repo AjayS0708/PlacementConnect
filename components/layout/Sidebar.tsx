@@ -114,7 +114,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         {navItems.map((item) => {
           const isActive = item.href === '/'
             ? pathname === item.href
-            : pathname.startsWith(item.href)
+            : (pathname?.startsWith(item.href) ?? false)
           
           return (
             <Link
