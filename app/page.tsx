@@ -81,17 +81,17 @@ function ArcGauge({ score, size = 140 }: { score: number; size?: number }) {
 
   return (
     <svg width={size} height={size - 10} viewBox={`0 0 ${size} ${size}`} aria-label={`Career health: ${score}/100`}>
-      <path d={arcPath(startAngle, startAngle + totalArc)} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={10} strokeLinecap="round" />
+      <path d={arcPath(startAngle, startAngle + totalArc)} fill="none" stroke="#e2e8f0" strokeWidth={10} strokeLinecap="round" />
       {score > 0 && (
         <motion.path d={arcPath(startAngle, fillAngle)} fill="none" stroke={color} strokeWidth={10}
           strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
           transition={{ duration: 1.2, ease: 'easeOut' }} />
       )}
       <text x={cx} y={cy + 6} textAnchor="middle" fontSize={score === 0 ? 20 : 30} fontWeight="700"
-        fill={score === 0 ? '#64748b' : color} fontFamily="Fraunces, serif">
+        fill={score === 0 ? '#94a3b8' : color} fontFamily="Fraunces, serif">
         {score === 0 ? '—' : anim}
       </text>
-      {score > 0 && <text x={cx} y={cy + 22} textAnchor="middle" fontSize={10} fill="rgba(255,255,255,0.45)" fontFamily="Sora, sans-serif">/ 100</text>}
+      {score > 0 && <text x={cx} y={cy + 22} textAnchor="middle" fontSize={10} fill="#94a3b8" fontFamily="Sora, sans-serif">/ 100</text>}
     </svg>
   )
 }
@@ -115,7 +115,7 @@ function Sparkline({ values }: { values: number[] }) {
   return (
     <div className="flex items-center gap-2">
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
-        <polyline points={pts} fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+        <polyline points={pts} fill="none" stroke="#818cf8" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
         {/* Last dot */}
         {(() => { const [lx, ly] = pts.split(' ').pop()!.split(','); return <circle cx={lx} cy={ly} r={2.5} fill={trendColor} /> })()}
       </svg>
@@ -256,7 +256,7 @@ export default function DashboardPage() {
     scoreHistory, weeklyActivityDots,
   } = data
 
-  const scoreColor = careerHealthScore >= 75 ? 'text-emerald-400' : careerHealthScore >= 50 ? 'text-indigo-400' : careerHealthScore > 0 ? 'text-amber-400' : 'text-slate-500'
+  const scoreColor = careerHealthScore >= 75 ? 'text-emerald-600' : careerHealthScore >= 50 ? 'text-indigo-600' : careerHealthScore > 0 ? 'text-amber-600' : 'text-slate-500'
 
   // Stat card urgency: pick the worst module to highlight
   const worstModule = r.score > 0 && r.score < 60 ? 'readiness' : j.savedCount > 0 && j.appliedCount === 0 ? 'jobs' : null
@@ -267,16 +267,15 @@ export default function DashboardPage() {
         className="space-y-4 px-0 pb-20 sm:pb-6 lg:px-1"
         variants={stagger} initial="hidden" animate="show"
       >
-        {/* ── Zone A — Hero (dark) ───────────────────────────────────────────── */}
+        {/* ── Zone A — Hero ─────────────────────────────────────────────────── */}
         <motion.section
           variants={fade}
-          className="relative overflow-hidden rounded-2xl sm:rounded-3xl"
-          style={{ background: 'linear-gradient(135deg, #0c1628 0%, #121a2e 55%, #1a1040 100%)' }}
+          className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-indigo-50/60 to-purple-50/40 shadow-sm"
         >
           {/* Ambient glow blobs */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-indigo-600/20 blur-3xl" />
-            <div className="absolute -bottom-12 left-8 h-48 w-48 rounded-full bg-emerald-600/15 blur-3xl" />
+            <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-indigo-400/10 blur-3xl" />
+            <div className="absolute -bottom-12 left-8 h-48 w-48 rounded-full bg-emerald-400/10 blur-3xl" />
           </div>
           {/* Top accent bar */}
           <div className="absolute left-0 right-0 top-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500" />
@@ -285,10 +284,10 @@ export default function DashboardPage() {
             {/* Left — greeting */}
             <div className="min-w-0">
               <p className="mb-1 text-xs font-medium uppercase tracking-widest text-slate-400">{formatDate()}</p>
-              <h1 className="font-serif text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
+              <h1 className="font-serif text-2xl font-bold text-slate-900 sm:text-3xl lg:text-4xl">
                 {getGreeting()} 👋
               </h1>
-              <p className="mt-2 max-w-sm text-sm leading-relaxed text-slate-400">
+              <p className="mt-2 max-w-sm text-sm leading-relaxed text-slate-500">
                 {isFirstVisit
                   ? 'Welcome to PlacementConnect. Set up your modules below to track your career readiness.'
                   : `Career health is ${healthLabel.toLowerCase()}. Here's what needs your attention today.`}
@@ -297,7 +296,7 @@ export default function DashboardPage() {
               {/* Sparkline under greeting */}
               {scoreHistory.length >= 2 && (
                 <div className="mt-3">
-                  <p className="mb-1 text-[10px] uppercase tracking-widest text-slate-500">Readiness trend</p>
+                  <p className="mb-1 text-[10px] uppercase tracking-widest text-slate-400">Readiness trend</p>
                   <Sparkline values={scoreHistory} />
                 </div>
               )}
@@ -306,7 +305,7 @@ export default function DashboardPage() {
               <div className="-mx-1 mt-5 flex gap-2 overflow-x-auto px-1 pb-1 [&::-webkit-scrollbar]:hidden">
                 {MOB_NAV.map(({ label, href, dot }) => (
                   <Link key={href} href={href}
-                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-white/80 backdrop-blur-sm transition-all hover:border-white/25 hover:bg-white/10 active:scale-95 min-h-[36px]"
+                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition-all hover:border-indigo-300 hover:bg-white hover:shadow-md active:scale-95 min-h-[36px]"
                   >
                     <span className={cn('h-1.5 w-1.5 rounded-full', dot)} />
                     {label}
@@ -320,7 +319,7 @@ export default function DashboardPage() {
               <ArcGauge score={careerHealthScore} size={130} />
               <div className="sm:text-center">
                 <p className={cn('text-sm font-bold', scoreColor)}>{healthLabel}</p>
-                <p className="text-[11px] text-slate-500">Career Health</p>
+                <p className="text-[11px] text-slate-400">Career Health</p>
               </div>
             </div>
           </div>
