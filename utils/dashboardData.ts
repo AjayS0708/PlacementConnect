@@ -58,6 +58,11 @@ export interface DashboardData {
   priorityActions: PriorityAction[]
   recentActivity: ActivityEvent[]
   isFirstVisit: boolean          // true when all localStorage keys are empty
+  scoreHistory: number[]         // last 5 readiness scores oldest→newest, for sparkline
+  weeklyActivityDots: {
+    jobs: boolean[]              // [Mon…Sun] had job activity that day
+    readiness: boolean[]         // [Mon…Sun] had practice session that day
+  }
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -387,6 +392,42 @@ function computeHealthScore(
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 
+// ─── Score history (sparkline) ───────────────────────────────────────────────
+
+function readScoreHistory(): number[] {
+  const history = safeJSON<Record<string, unknown>[]>('placement_readiness_history_v1', [])
+  return history
+    .map(entry => {
+      if (typeof entry.overallScore === 'number') return entry.overallScore
+      if (typeof entry.score === 'number') return entry.score
+      if (typeof entry.readinessScore === 'number') return entry.readinessScore
+      return null
+    })
+    .filter((s): s is number => s !== null)
+    .slice(-5) // oldest→newest, max 5 points
+}
+
+// ─── Weekly heatmap dots ─────────────────────────────────────────────────────
+
+// Returns [Mon, Tue, Wed, Thu, Fri, Sat, Sun] as booleans for the CURRENT week
+function getWeekStart(): number {
+  const now = new Date()
+  const day = now.getDay() // 0=Sun … 6=Sat
+  const monday = new Date(now)
+  monday.setHours(0, 0, 0, 0)
+  monday.setDate(now.getDate() - ((day + 6) % 7))
+  return monday.getTime()
+}
+
+function weekDots(timestamps: number[]): boolean[] {
+  const weekStart = getWeekStart()
+  return Array.from({ length: 7 }, (_, i) => {
+    const dayStart = weekStart + i * 86_400_000
+    const dayEnd   = dayStart + 86_400_000
+    return timestamps.some(ts => ts >= dayStart && ts < dayEnd)
+  })
+}
+
 export function getDashboardData(): DashboardData {
   const jobsRaw = readJobsModule()
   const { lastActivityTs: _, ...jobs } = jobsRaw
@@ -406,6 +447,19 @@ export function getDashboardData(): DashboardData {
 
   const priorityActions = computePriorityActions(jobs, readiness, resume)
   const recentActivity = buildActivityFeed(jobsRaw, resume)
+  const scoreHistory = readScoreHistory()
+
+  // Weekly heatmap dots
+  const jobHistory = safeJSON<{ timestamp: number }[]>('jobStatusHistory', [])
+  const sessions = safeJSON<{ startedAt?: string; createdAt?: string }[]>(
+    'placement-readiness-interview-sessions', []
+  )
+  const weeklyActivityDots = {
+    jobs: weekDots(jobHistory.map(h => h.timestamp)),
+    readiness: weekDots(
+      sessions.map(s => new Date(s.startedAt ?? s.createdAt ?? 0).getTime())
+    ),
+  }
 
   return {
     careerHealthScore,
@@ -416,5 +470,7 @@ export function getDashboardData(): DashboardData {
     priorityActions,
     recentActivity,
     isFirstVisit,
+    scoreHistory,
+    weeklyActivityDots,
   }
 }
