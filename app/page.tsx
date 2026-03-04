@@ -243,8 +243,7 @@ export default function DashboardPage() {
           <div className="h-80 rounded-2xl bg-slate-200" />
           <div className="h-80 rounded-2xl bg-slate-200" />
         </div>
-        {/* mobile nav skeleton */}
-        <div className="fixed bottom-0 left-0 right-0 h-16 border-t border-slate-100 bg-white sm:hidden" />
+
       </div>
     )
   }
@@ -631,18 +630,7 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
-      {/* ── Mobile sticky bottom nav ──────────────────────────────────────────── */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-100 bg-white/95 backdrop-blur-md sm:hidden safe-area-inset-bottom">
-        <div className="flex items-stretch">
-          {MOB_NAV.map(({ label, href, color, icon }) => (
-            <Link key={href} href={href}
-              className={cn('flex flex-1 flex-col items-center justify-center gap-0.5 py-2.5 text-center min-h-[56px] transition-colors active:bg-slate-50', color)}>
-              {icon}
-              <span className="text-[10px] font-semibold tracking-tight">{label}</span>
-            </Link>
-          ))}
-        </div>
-      </nav>
+
     </>
   )
 }
