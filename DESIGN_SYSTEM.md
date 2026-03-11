@@ -1,50 +1,60 @@
-# KodNest Premium Build System — Design Specifications
+# Placement Connect — Carbon Ascent Design System
 
 ## Overview
-This document defines the complete design system for KodNest Premium Build System. Every designer and developer must follow these specifications exactly to maintain visual consistency.
+This document defines the complete design system for **Placement Connect**. Every designer and developer must follow these specifications exactly to maintain visual consistency across all three product modules: Job Notifications, Placement Readiness, and Resume Builder.
 
 ---
 
 ## 1. Design Philosophy
 
 ### Core Principles
-- **Calm**: No animations for the sake of animation. No visual noise.
-- **Intentional**: Every pixel has a purpose. No decoration.
-- **Coherent**: One system, one mind. No visual drift between pages.
-- **Confident**: Clear hierarchy. Generous whitespace. No apologies.
+- **Ambitious**: Forward-leaning UI that mirrors the urgency of placement season.
+- **Trustworthy**: Consistent visual language, clear hierarchy, honest data presentation.
+- **Sharp**: Information density that respects the user — no fluff, no filler.
+- **Coherent**: One system, one mind. No visual drift between product modules.
 
 ### Anti-Patterns (Never Do This)
-- ❌ Gradients
-- ❌ Glassmorphism / frosted glass effects
-- ❌ Neon colors
-- ❌ Bounce animations
-- ❌ Parallax scrolling
-- ❌ Decorative fonts
-- ❌ Random spacing values
-- ❌ Drop shadows (subtle borders only)
-- ❌ More than 4 colors
+- ❌ Purple gradients (overused SaaS cliché)
+- ❌ Neon colors or oversaturated palettes
+- ❌ Bounce animations or parallax scrolling
+- ❌ Pie charts (use donuts with center stat instead)
+- ❌ Icon-only navigation on first use
+- ❌ Random spacing values (stick to the 8px scale)
+- ❌ Gradient buttons or gradient card backgrounds
+- ❌ More than 5% visual weight of accent orange per screen
 
 ---
 
 ## 2. Color System
 
+### Palette Name: Carbon Ascent
+
 ### Primary Palette
 ```css
---color-background: #F7F6F3;  /* Off-white, not pure white */
---color-primary: #111111;      /* Near-black for text */
---color-accent: #8B0000;       /* Deep red for actions */
---color-success: #4A5F4A;      /* Muted green */
---color-warning: #8B7355;      /* Muted amber */
---color-border: #D4D2CC;       /* Subtle borders */
---color-surface-light: #FEFEFE; /* Cards/elevated surfaces */
+/* Light Mode */
+--color-background:   #F4F5F7;  /* Cloud White — page background */
+--color-surface-0:    #FFFFFF;  /* Card & elevated surface */
+--color-primary:      #1A1F2E;  /* Deep Space Navy — brand primary */
+--color-accent:       #F5820A;  /* Launch Orange — CTAs, progress, highlights */
+--color-success:      #12B76A;  /* Signal Green — readiness scores, completions */
+--color-border:       #E2E4EA;  /* Subtle borders */
+--color-text-primary: #1A1F2E;  /* Primary body text */
+--color-text-muted:   #6B7280;  /* Secondary / caption text */
+
+/* Dark Mode (Carbon Focus) */
+--color-background:   #0D1117;  /* Obsidian */
+--color-surface-0:    #1A1F2E;  /* Deep Space Navy as surface */
+--color-border:       #2A2F3E;
+--color-text-primary: #E8EAF0;
+--color-text-muted:   #8B929E;
 ```
 
 ### Usage Rules
-- Background: Use for page backgrounds (#F7F6F3)
-- Primary: All text unless otherwise specified (#111111)
-- Accent: Primary buttons, important actions (#8B0000)
-- Success/Warning: System feedback only
-- Never introduce new colors without design system approval
+- **Background**: Page canvas — `#F4F5F7` (light) / `#0D1117` (dark)
+- **Primary**: Text, nav, sidebar backgrounds
+- **Accent**: CTA buttons, active nav, progress fills, percentage rings. Max 15% visual weight per screen. Never as a large background fill.
+- **Success**: Score fills, placement readiness %, completion checkmarks
+- Never introduce colours outside this palette without design approval
 
 ---
 
@@ -52,28 +62,36 @@ This document defines the complete design system for KodNest Premium Build Syste
 
 ### Font Families
 ```css
---font-serif: 'Libre Baskerville', Georgia, serif;
---font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
---font-mono: 'SF Mono', 'Consolas', monospace; /* Code only */
+--font-display: 'Syne', sans-serif;       /* Headings, brand wordmark */
+--font-sans:    'DM Sans', sans-serif;    /* UI, body, forms, data */
+--font-mono:    'JetBrains Mono', monospace; /* Code snippets only */
+```
+
+**Google Fonts import** (in `globals.css`):
+```css
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 ```
 
 ### Type Scale
 ```css
---heading-xl: 64px / 1.1    /* Hero headlines only */
---heading-lg: 48px / 1.2    /* Page headlines */
---heading-md: 32px / 1.25   /* Section titles */
---heading-sm: 24px / 1.3    /* Card titles */
---body-lg: 18px / 1.7       /* Introductory text */
---body-base: 16px / 1.6     /* Default body text */
---body-sm: 14px / 1.5       /* Labels, metadata */
+--text-h1:     52px / 1.15  /* Syne 700, -0.02em tracking */
+--text-h2:     36px / 1.20  /* Syne 600, -0.02em tracking */
+--text-h3:     24px / 1.30  /* Syne 600, -0.01em tracking */
+--text-h4:     18px / 1.40  /* DM Sans 600 */
+--text-body:   15px / 1.60  /* DM Sans 400 */
+--text-small:  13px / 1.50  /* DM Sans 400 */
+--text-caption:11px / 1.40  /* DM Sans 400 */
+--text-cta:    15px / 1.00  /* DM Sans 600, +0.02em tracking */
 ```
 
 ### Typography Rules
-1. **Headings = Serif** (Libre Baskerville), **Body = Sans-Serif** (Inter)
-2. All text blocks max-width: 720px for readability
-3. Never use font sizes outside the type scale
-4. Generous letter-spacing for headings (tracking: 0.01em)
-5. No decorative fonts, no script fonts, no novelty fonts
+1. **Headings = Syne**, **Body/UI = DM Sans**
+2. H1–H2 letter-spacing: `-0.02em`; H3–H4: `-0.01em`
+3. CTA buttons: `+0.02em` (slightly open for legibility)
+4. ALL CAPS labels: `+0.08em`
+5. All text blocks max-width: `720px` for readability
+6. Never use font sizes outside the type scale
+7. Never use Inter, Roboto, Arial, or system fonts for brand elements
 
 ---
 
@@ -166,24 +184,27 @@ Every page must follow this exact structure:
 
 #### Primary Button
 ```css
-background: #8B0000 (accent)
+background: #F5820A  /* Launch Orange */
 color: #FFFFFF
-padding: 16px 24px
+padding: 12px 20px
+border-radius: 8px
 border: none
-font: Inter, 16px, font-weight 500
+font: DM Sans, 15px, font-weight 600, letter-spacing 0.02em
 transition: 150ms ease-in-out
-hover: background: #6B0000 (darker)
+hover: background: #dc6c08
+focus: outline 2px solid #F5820A, offset 2px
 ```
 
 #### Secondary Button
 ```css
 background: transparent
-color: #111111
-padding: 16px 24px
-border: 2px solid #111111
-font: Inter, 16px, font-weight 500
+color: #1A1F2E
+padding: 12px 20px
+border-radius: 8px
+border: 1.5px solid #E2E4EA
+font: DM Sans, 15px, font-weight 600
 transition: 150ms ease-in-out
-hover: background: #111111, color: #FFFFFF
+hover: border-color: #1A1F2E, background: #f6f7f9
 ```
 
 #### States
@@ -193,31 +214,52 @@ hover: background: #111111, color: #FFFFFF
 
 ### Card
 ```css
-background: #FEFEFE (surface-light)
-border: 1px solid #D4D2CC
+background: #FFFFFF
+border: 1px solid #E2E4EA
 padding: 24px (medium) or 40px (large)
-border-radius: 0 (sharp corners)
-box-shadow: none (borders only, no shadows)
+border-radius: 12px
+box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)
+hover (interactive cards): box-shadow: 0 4px 16px rgba(0,0,0,0.12)
 ```
 
 ### Input
 ```css
-background: #FEFEFE
-border: 2px solid #D4D2CC
-padding: 16px
-font: Inter, 16px
-color: #111111
+background: #FFFFFF
+border: 1.5px solid #E2E4EA
+padding: 12px 16px
+border-radius: 8px
+font: DM Sans, 15px
+color: #1A1F2E
 transition: 150ms ease-in-out
-focus: border-color: #111111
-error: border-color: #8B0000
+focus: border-color: #F5820A
+error: border-color: #ef4444
 ```
 
-### Checkbox
+### Badge / Tag
 ```css
-size: 24px × 24px
-border: 2px solid #D4D2CC
-background: #FEFEFE (unchecked) or #8B0000 (checked)
-checkmark: white, 2px stroke
+border-radius: 6px
+padding: 2px 8px
+font: DM Sans, 11px, font-weight 500, letter-spacing 0.02em
+accent-orange variant: background #fff8ee, color #dc6c08
+success variant: background #edfdf5, color #099556
+```
+
+### Shape & Elevation
+```css
+/* Border Radius */
+--radius-sm:  6px   /* Badges, tags */
+--radius-md:  8px   /* Buttons, inputs */
+--radius-lg:  12px  /* Cards */
+--radius-xl:  16px  /* Modals, sheets */
+
+/* Elevation (box-shadow) */
+--shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)
+--shadow-md:  0 4px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.06)
+--shadow-lg:  0 20px 48px rgba(0,0,0,0.18)
+
+/* Launch Orange glow (active/focused states) */
+--glow-sm: 0 0 8px rgba(245, 130, 10, 0.3)
+--glow-md: 0 0 16px rgba(245, 130, 10, 0.4)
 ```
 
 ---
@@ -225,9 +267,9 @@ checkmark: white, 2px stroke
 ## 7. Interaction & Animation
 
 ### Transitions
-- Duration: 150ms (standard for all interactions)
-- Timing: ease-in-out (no bounce, no spring)
-- Properties: background-color, color, border-color, opacity
+- Standard: `200ms cubic-bezier(0.4, 0, 0.2, 1)` — most state changes
+- Fast: `100ms` — hover microinteractions
+- Spring: `300ms cubic-bezier(0.34, 1.56, 0.64, 1)` — modals, drawers
 
 ### Hover States
 - Buttons: Background color change (150ms)
@@ -240,9 +282,9 @@ checkmark: white, 2px stroke
 - Text: "Loading..." in muted color
 
 ### Focus States
-- Keyboard focus: Same as hover state
-- No separate focus ring (goes against calm aesthetic)
-- Ensure accessibility via visible state change
+- Keyboard focus: `outline: 2px solid #F5820A; outline-offset: 2px`
+- Always clearly visible — critical for accessibility
+- Border radius matches the focused component’s --radius-*
 
 ---
 
@@ -253,8 +295,8 @@ checkmark: white, 2px stroke
 Format: [What went wrong] + [How to fix it]
 Example: "Connection failed. Check your internet and try again."
 Never: "Error 404" or "Oops!" or blame language
-Color: #8B0000 (accent)
-Font: Inter, 16px, font-weight 500
+Color: #ef4444 (error red)
+Font: DM Sans, 15px, font-weight 500
 ```
 
 ### Empty States
@@ -308,18 +350,18 @@ Desktop: > 1024px
 
 ## 11. Content Guidelines
 
-### Voice & Tone
-- **Professional**: Avoid casual language, slang, emojis (unless intentional)
-- **Direct**: Say what needs to be said, nothing more
-- **Helpful**: Explain how to fix problems, not just that they exist
-- **Confident**: No "maybe", "try", "hopefully"
+### Voice & Tone — Carbon Ascent
+- **Ambitious**: Forward-motion language. Active verbs. Progress framing.
+- **Direct**: Short punchy headlines. No adjective-stuffed marketing copy.
+- **Trustworthy**: Data-forward. Never exaggerate. Show numbers.
+- **Sharp**: Verb + Object CTAs ("View Jobs", "Update Profile", "Download Resume")
 
 ### Writing Rules
 - Headlines: 1 line maximum, no periods
-- Subtext: 1-2 sentences, provide context
-- Button text: Verb + Object ("Create Project", not "Create")
+- CTA buttons: Verb + Object (“View Jobs” not “Jobs”)
 - Error messages: Problem + Solution
-- Empty states: Status + Action
+- Empty states: Status + Next action
+- Avoid: "Unlock", "Journey", "Empower", "Bestie", "Oops!"
 
 ---
 
@@ -355,22 +397,21 @@ app/
 
 Before shipping any interface, verify:
 
-- [ ] Uses only approved colors from the palette
-- [ ] All spacing follows the 8/16/24/40/64 scale
-- [ ] Typography uses defined type scale and font families
-- [ ] Text blocks are max 720px wide
-- [ ] Buttons follow primary/secondary patterns
-- [ ] Transitions are 150ms ease-in-out
-- [ ] No gradients, glassmorphism, or drop shadows
-- [ ] Error messages explain the problem and solution
-- [ ] Empty states provide a clear next action
-- [ ] Keyboard navigation works correctly
-- [ ] Contrast ratios meet WCAG AA standards
-- [ ] Mobile layout stacks properly
-- [ ] No visual drift from other pages
+- [ ] Uses only Carbon Ascent approved colours
+- [ ] All spacing follows the 8/16/24/40/64px scale
+- [ ] Typography: headings in Syne, body/UI in DM Sans
+- [ ] Text blocks max-width 720px
+- [ ] Buttons follow primary (orange) / secondary (outlined) pattern
+- [ ] Accent orange ≤ 15% visual weight per screen
+- [ ] Elevation shadows applied correctly (not decorative)
+- [ ] Gradients used only in hero BG or progress fills
+- [ ] Error messages explain problem + solution
+- [ ] Empty states include a clear CTA
+- [ ] Keyboard navigation works
+- [ ] Contrast ratios meet WCAG AA
+- [ ] Mobile layout stacks correctly
+- [ ] No visual drift from other pages or modules
 
 ---
 
-**This is the complete design specification. Deviations require explicit approval.**
-
-**KodNest Premium Build System** — One system, one mind.
+**Placement Connect** — Carbon Ascent Design System. One platform. One brand. One standard.

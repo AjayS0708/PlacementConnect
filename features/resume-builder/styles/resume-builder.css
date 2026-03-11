@@ -52,7 +52,7 @@
 }
 
 .resume-builder .brand {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Syne", sans-serif;
   font-size: 24px;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -96,7 +96,7 @@
 
 .resume-builder .hero-card h1 {
   margin: 0 0 var(--space-4);
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Syne", sans-serif;
   font-size: clamp(36px, 6vw, 56px);
   line-height: 1.05;
 }
@@ -372,7 +372,7 @@
 .resume-builder h2,
 .resume-builder h3,
 .resume-builder h4 {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Syne", sans-serif;
   letter-spacing: 0.01em;
 }
 
@@ -440,7 +440,7 @@
 
 .resume-builder .project-card h5 {
   margin: 0;
-  font-family: "Fraunces", Georgia, serif;
+  font-family: "Syne", sans-serif;
   font-size: 16px;
 }
 
