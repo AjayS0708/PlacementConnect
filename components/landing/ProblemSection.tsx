@@ -62,11 +62,11 @@ export default function ProblemSection() {
           </p>
           <h2 className="font-display font-bold text-white leading-tight tracking-tight mb-4"
             style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
-            You're juggling 4 tabs, 3 WhatsApp groups,<br className="hidden lg:block" /> and 2 Excel sheets.
-            <span className="text-[#8B929E]"> That's not a strategy.</span>
+            You&apos;re juggling 4 tabs, 3 WhatsApp groups,<br className="hidden lg:block" /> and 2 Excel sheets.
+            <span className="text-[#8B929E]"> That&apos;s not a strategy.</span>
           </h2>
           <p className="text-[16px] leading-relaxed text-[#8B929E] font-sans">
-            Every day without a system is a day your competition gets ahead. Here's what the old way costs you.
+            Every day without a system is a day your competition gets ahead. Here&apos;s what the old way costs you.
           </p>
         </motion.div>
 
@@ -111,7 +111,7 @@ export default function ProblemSection() {
         >
           <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#2A2F3E]" />
           <p className="text-[14px] font-semibold text-[#F5820A] font-sans px-2">
-            There's a better way. ↓
+            There&apos;s a better way. ↓
           </p>
           <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#2A2F3E]" />
         </motion.div>

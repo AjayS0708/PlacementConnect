@@ -78,7 +78,7 @@ export default function TestimonialsSection() {
                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
               </svg>
               <p className="text-[16px] leading-relaxed text-[#1A1F2E] font-sans mb-6">
-                "{TESTIMONIALS[0].quote}"
+                &ldquo;{TESTIMONIALS[0].quote}&rdquo;
               </p>
             </div>
 
@@ -111,7 +111,7 @@ export default function TestimonialsSection() {
             className="flex flex-col justify-between rounded-2xl border border-[#E2E4EA] bg-[#1A1F2E] p-6 lg:col-start-2"
           >
             <p className="text-[14px] leading-relaxed text-[#B0B8CC] font-sans mb-5">
-              "{TESTIMONIALS[1].quote}"
+              &ldquo;{TESTIMONIALS[1].quote}&rdquo;
             </p>
             <div className="flex items-center gap-3 border-t border-[#2A2F3E] pt-4">
               <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${TESTIMONIALS[1].avatarBg} font-display text-[12px] font-bold text-white`}>
@@ -137,7 +137,7 @@ export default function TestimonialsSection() {
                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
               </svg>
               <p className="text-[15px] leading-relaxed text-[#1A1F2E] font-sans mb-5">
-                "{TESTIMONIALS[2].quote}"
+                &ldquo;{TESTIMONIALS[2].quote}&rdquo;
               </p>
             </div>
 

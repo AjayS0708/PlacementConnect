@@ -54,7 +54,7 @@ export default function HowItWorks() {
           <p className="mb-3 text-[12px] uppercase tracking-[0.1em] text-[#F5820A] font-sans font-semibold">How it works</p>
           <h2 className="font-display font-bold text-[#1A1F2E] leading-tight tracking-tight"
             style={{ fontSize: 'clamp(26px, 3.5vw, 40px)' }}>
-            From campus to offer letter.<br />Here's how.
+            From campus to offer letter.<br />Here&apos;s how.
           </h2>
         </motion.div>
 
