@@ -12,7 +12,7 @@ import { HiddenOnMobile } from '@/components/Responsive'
 const MOB_TABS = [
   {
     label: 'Home',
-    href: '/',
+    href: '/dashboard',
     exact: true,
     activeColor: 'text-indigo-600',
     activeBg: 'bg-indigo-50',
@@ -84,6 +84,9 @@ type AppShellProps = {
 export default function AppShell({ children }: AppShellProps) {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
+
+  // Landing page at "/" renders without the app shell
+  if (pathname === '/') return <>{children}</>
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_#fef6e8_0%,_#f5f7ff_45%,_#f7f3ee_100%)] text-primary">
